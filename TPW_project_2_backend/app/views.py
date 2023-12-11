@@ -671,10 +671,12 @@ def favorites(request):
 
 @api_view(['GET'])
 def get_products(request):
-    if request.method == 'GET':
+    try:
         products = Product.objects.all()
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
+    except Product.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['GET'])
 def get_followed_products(request):
