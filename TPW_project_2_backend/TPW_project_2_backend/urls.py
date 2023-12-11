@@ -43,6 +43,9 @@ urlpatterns = [
     path("process_payment/", views.process_payment, name="process_payment"),
     path("account/favorites/", views.favorites, name="favorites"),
 
-
+    # REST API
+    path('ws/products', views.get_products),
+    path('ws/followed_products', views.get_followed_products),
+    path('ws/explore_products', views.get_explore_products),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

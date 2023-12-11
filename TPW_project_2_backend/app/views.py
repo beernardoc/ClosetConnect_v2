@@ -667,3 +667,43 @@ def favorites(request):
 
     return render(request, 'favorites.html',
                   {'favorites': favorites_products, 'user': user})
+
+
+@api_view(['GET'])
+def get_products(request):
+    if request.method == 'GET':
+        products = Product.objects.all()
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data)
+
+@api_view(['GET'])
+def get_followed_products(request):
+    user_id = int(request.GET['id'])
+
+    try:
+        user = User.objects.get(id=user_id)
+        followers = Follower.objects.filter(follower=user)
+        followers_id = [follower.followed.id for follower in followers]
+        products = Product.objects.filter(user_id__in=followers_id)
+        serializer = ProductSerializer(products, many=True)
+
+        return Response(serializer.data)
+    except User.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['GET'])
+def get_explore_products(request):
+    user_id = int(request.GET['id'])
+
+    try:
+        user = User.objects.get(id=user_id)
+        followers = Follower.objects.filter(follower=user)
+        followers_id = [follower.followed.id for follower in followers]
+        products = Product.objects.exclude(user_id__in=followers_id)
+        # also exclude the actual user products
+        products = products.exclude(user_id=user)
+        serializer = ProductSerializer(products, many=True)
+
+        return Response(serializer.data)
+    except User.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
