@@ -1,3 +1,5 @@
+import base64
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login as auth_login
 from django.http import JsonResponse
@@ -673,7 +675,15 @@ def favorites(request):
 def get_products(request):
     try:
         products = Product.objects.all()
+        # the image is a file, we need to send it as a base64 string
+        image_base64 = []
+        for product in products:
+            image = product.image
+            image_base64.append(base64.b64encode(image.read()))
         serializer = ProductSerializer(products, many=True)
+        for i in range(len(serializer.data)):
+            serializer.data[i]['image'] = image_base64[i]
+
         return Response(serializer.data)
     except Product.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
@@ -687,7 +697,14 @@ def get_followed_products(request):
         followers = Follower.objects.filter(follower=user)
         followers_id = [follower.followed.id for follower in followers]
         products = Product.objects.filter(user_id__in=followers_id)
+        # the image is a file, we need to send it as a base64 string
+        image_base64 = []
+        for product in products:
+            image = product.image
+            image_base64.append(base64.b64encode(image.read()))
         serializer = ProductSerializer(products, many=True)
+        for i in range(len(serializer.data)):
+            serializer.data[i]['image'] = image_base64[i]
 
         return Response(serializer.data)
     except User.DoesNotExist:
@@ -704,7 +721,14 @@ def get_explore_products(request):
         products = Product.objects.exclude(user_id__in=followers_id)
         # also exclude the actual user products
         products = products.exclude(user_id=user)
+        # the image is a file, we need to send it as a base64 string
+        image_base64 = []
+        for product in products:
+            image = product.image
+            image_base64.append(base64.b64encode(image.read()))
         serializer = ProductSerializer(products, many=True)
+        for i in range(len(serializer.data)):
+            serializer.data[i]['image'] = image_base64[i]
 
         return Response(serializer.data)
     except User.DoesNotExist:

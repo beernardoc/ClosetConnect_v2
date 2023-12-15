@@ -1,0 +1,86 @@
+<!--This is going to be the index page for the site-->
+
+<!--Following-->
+<h1 class="text-muted">For you <i class="bi bi-person-fill"></i></h1>
+<div class="row row-cols-1 row-cols-md-3 g-4 mb-5" style="min-height: 400px">
+  <ng-container *ngIf="followings.length === 0">
+    <div class="col-md-12 d-flex align-items-center justify-content-center bg-light p-4">
+      <p style="font-size: 24px; color: rgb(192,193,196);">If you want to start getting recommendations, start following someone.</p>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="followings.length > 0">
+    <ng-container *ngFor="let product of followings">
+      <div class="col-md-4 mt-5">
+        <div class="card h-100 border-0 rounded-0 shadow" style="width: 25rem;">
+          <img src="{{ product.image }}" class="card-img-top rounded-0" alt="...">
+          <div class="card-body d-flex flex-column mt-3 mb-3">
+            <div class="row mt-auto">
+              <div class="col-10">
+                <h4 class="card-title">{{ product.name }}</h4>
+                <p class="card-text text-muted" style="display: flex; align-items: center">
+                  {{ product.description }}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="row align-items-center text-center g-0">
+            <div class="col-4">
+              <h5>{{ product.price }}€</h5>
+            </div>
+            <div class="col-4">
+              <a href="" class="btn btn-info w-100 p-3 rounded-0 text-center">
+                <i class="bi bi-eye"></i>
+                <span class="align-middle">View</span>
+              </a>
+            </div>
+            <div class="col-4">
+              <a href="" class="btn btn-success w-100 p-3 rounded-0 text-center" onclick="ShowModal()">
+                <i class="bi bi-cart-plus"></i>
+                <span class="align-middle">Buy</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+</div>
+
+<!--Explore-->
+<h1 class="text-muted">Explore <i class="bi bi-compass-fill"></i></h1>
+<div class="row row-cols-1 row-cols-md-3 g-4" style="min-height: 400px">
+  <ng-container *ngFor="let product of explore">
+    <div class="col-md-4 mt-5">
+      <div class="card h-100 border-0 rounded-0 shadow" style="width: 25rem;">
+        <img src="{{ product.image }}" class="card-img-top rounded-0" alt="...">
+        <div class="card-body d-flex flex-column mt-3 mb-3">
+          <div class="row mt-auto">
+            <div class="col-10">
+              <h4 class="card-title">{{ product.name }}</h4>
+              <p class="card-text text-muted" style="display: flex; align-items: center">
+                {{ product.description }}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="row align-items-center text-center g-0">
+          <div class="col-4">
+            <h5>{{ product.price }}€</h5>
+          </div>
+          <div class="col-4">
+            <a href="" class="btn btn-info w-100 p-3 rounded-0 text-center">
+              <i class="bi bi-eye"></i>
+              <span class="align-middle">View</span>
+            </a>
+          </div>
+          <div class="col-4">
+            <a href="" class="btn btn-success w-100 p-3 rounded-0 text-center" onclick="ShowModal()">
+              <i class="bi bi-cart-plus"></i>
+              <span class="align-middle">Buy</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>
