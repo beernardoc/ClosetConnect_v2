@@ -16,6 +16,12 @@ export class IndexComponent {
   explore: Product[] = [];
   productService: ProductService = inject(ProductService);
 
+  addToCart(ProductID: Number) {
+    console.log(`Produto ${ProductID} adicionado ao carrinho.`);
+  }
+
+
+
 constructor() {
     this.productService.getProducts().then((products: Product[]) => {
       this.explore = products;
@@ -24,13 +30,17 @@ constructor() {
       }
     });
 
-  // this.productService.getFollowedProducts().then((products: Product[]) => {
-  //   this.followings = products;
-  //   console.log(this.followings);
-  // });
+    this.productService.getFollowedProducts().then((products: Product[]) => {
+     this.followings = products;
+     console.log("aq " + this.followings);
+    });
   // this.productService.getExploreProducts().then((products: Product[]) => {
   //   this.explore = products;
   //   console.log(this.explore);
-  // });
+  // }
+
+
+
+
   }
 }

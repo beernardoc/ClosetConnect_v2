@@ -43,7 +43,8 @@ def index(request):
         show_modal = request.session.pop('show_modal', False)
 
         return render(request, 'index.html',
-                      {'user': user, 'products': OthersProducts, 'filtredProducts': filtredProducts, 'show_modal': show_modal})
+                      {'user': user, 'products': OthersProducts, 'filtredProducts': filtredProducts,
+                       'show_modal': show_modal})
     except User.DoesNotExist:
         return render(request, 'index.html', {'user': None, 'products': ls, 'filtredProducts': None})
 
@@ -81,7 +82,6 @@ def register(request):
     else:
         form = RegisterForm()
         return render(request, 'register.html', {'form': form, 'error': False})
-
 
 
 @login_required(login_url='/login')
@@ -301,7 +301,7 @@ def viewCart(request):
     user = User.objects.get(username=request.user.username)
     cart, created = Cart.objects.get_or_create(user=user)
 
-    price = round(cart.price,2)
+    price = round(cart.price, 2)
 
     return render(request, 'cart.html', {'cart_items': cart.items.all(), 'cart': cart, 'price': price, 'user': user})
 
@@ -526,10 +526,6 @@ def seller(request, username):
         return HttpResponse("Some default response")
 
 
-
-
-
-
 def admin_page(request):
     errorUser = False
     errorProduct = False
@@ -561,7 +557,8 @@ def admin_page(request):
                 users = User.objects.all()
                 products = Product.objects.all()
             return render(request, 'admin_page.html',
-                          {'user': user, 'users': users, 'products': products, 'errorUser': errorUser, 'errorProduct': errorProduct})
+                          {'user': user, 'users': users, 'products': products, 'errorUser': errorUser,
+                           'errorProduct': errorProduct})
 
         elif "searchProduct" in request.POST:
             q = request.POST['searchProduct']
@@ -579,7 +576,8 @@ def admin_page(request):
                 products = Product.objects.all()
                 errorProduct = False
             return render(request, 'admin_page.html',
-                          {'user': user, 'users': users, 'products': products, 'errorUser': errorUser, 'errorProduct': errorProduct})
+                          {'user': user, 'users': users, 'products': products, 'errorUser': errorUser,
+                           'errorProduct': errorProduct})
 
         elif "deleteUser" in request.POST:
             user_id = request.POST['deleteUser']
@@ -592,7 +590,8 @@ def admin_page(request):
     users = User.objects.all()
     products = Product.objects.all()
     return render(request, 'admin_page.html',
-                  {'user': user, 'errorUser': errorUser, 'errorProduct': errorProduct, 'users': users, 'products': products})
+                  {'user': user, 'errorUser': errorUser, 'errorProduct': errorProduct, 'users': users,
+                   'products': products})
 
 
 @login_required(login_url='/login')
@@ -666,7 +665,6 @@ def favorites(request):
     # Get the products that match the IDs
     favorites_products = Product.objects.filter(id__in=favorites_product_ids)
 
-
     return render(request, 'favorites.html',
                   {'favorites': favorites_products, 'user': user})
 
@@ -687,6 +685,7 @@ def get_products(request):
         return Response(serializer.data)
     except Product.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
 
 @api_view(['GET'])
 def get_followed_products(request):
@@ -710,6 +709,7 @@ def get_followed_products(request):
     except User.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+
 @api_view(['GET'])
 def get_explore_products(request):
     user_id = int(request.GET['id'])
@@ -732,4 +732,37 @@ def get_explore_products(request):
 
         return Response(serializer.data)
     except User.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['POST'])
+def post_item_cart(request):
+    product_id = request.data['productID']
+    username = request.data['username']
+
+    try:
+        product = get_object_or_404(Product, id=product_id)
+        user = User.objects.get(username=username)
+
+        cart, created = Cart.objects.get_or_create(user=user)
+
+        cart_item, created = CartItem.objects.get_or_create(product=product, user=user)
+
+        if not created:
+            pass
+
+        else:
+            cart_item.price = product.price
+            cart.price += product.price
+
+            cart.items.add(cart_item)
+            cart_item.save()
+            cart.save()
+
+      #  print(cart.price)
+       #  print(cart.items.count())
+        #  print(cart_item)
+
+        return Response(status=status.HTTP_201_CREATED)
+    except Product.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
