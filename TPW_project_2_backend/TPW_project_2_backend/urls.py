@@ -54,5 +54,6 @@ urlpatterns = [
     path('ws/users', views.get_users),
     path('ws/user/<int:user_id>', views.get_user),
     path('ws/loginUser', views.get_user_with_username_and_password),
+    path('ws/registerUser', views.new_user),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

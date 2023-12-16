@@ -826,3 +826,22 @@ def get_user_with_username_and_password(request):
     except User.DoesNotExist:
         print("User does not exist")
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+# create a new user, REST API
+@api_view(['POST'])
+def new_user(request):
+    try:
+        data = json.loads(request.body)
+        username = data['username']
+        name = data['name']
+        email = data['email']
+        password = data['password']
+        user = User.objects.create(username=username, name=name, email=email, password=password)
+        # make the image the default image
+        user.image = 'user_no_picture.png'
+        user.save()
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+    except User.DoesNotExist:
+        print("User does not exist")
+        return Response(status=status.HTTP_404_NOT_FOUND)

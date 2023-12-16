@@ -52,10 +52,7 @@ export class LoginComponent implements OnInit {
 
     } else {
       // Check if any of the fields are dirty (touched or modified)
-      if (this.loginForm.dirty) {
-        // If the form is invalid and has been interacted with, show error messages
-        this.loginForm.markAllAsTouched();
-      }
+      this.loginForm.markAllAsTouched();
       console.log('Invalid form submitted');
     }
   }
