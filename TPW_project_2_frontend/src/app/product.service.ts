@@ -23,7 +23,7 @@ export class ProductService {
   }
 
   async getFollowedProducts(): Promise<Product[]> {
-    const url: string = this.baseUrl + "followed_products?id=1"; // depois fazer função getid do user atual
+    const url: string = this.baseUrl + "followed_products?id=1"; // TODO: get the user
     const data: Response = await fetch(url);
 
     const products: Product[] = await data.json() ?? [];
@@ -46,7 +46,7 @@ export class ProductService {
       const data: Response = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productID: productID, username: "jose" }) // depois usar a função do get do user atual
+        body: JSON.stringify({ productID: productID, username: "jose" }) // TODO: get the user
       });
 
       if (!data.ok) {

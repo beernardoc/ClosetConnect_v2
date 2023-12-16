@@ -48,5 +48,6 @@ urlpatterns = [
     path('ws/followed_products', views.get_followed_products),
     path('ws/explore_products', views.get_explore_products),
     path('ws/add_product_to_cart', views.post_item_cart),
+    path('ws/cart', views.get_cart)
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

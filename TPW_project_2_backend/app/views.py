@@ -759,10 +759,42 @@ def post_item_cart(request):
             cart_item.save()
             cart.save()
 
-      #  print(cart.price)
-       #  print(cart.items.count())
-        #  print(cart_item)
+        print(cart.items.all())
+        print(cart.price)
+        print(cart.items.count())
+        print(cart_item)
 
         return Response(status=status.HTTP_201_CREATED)
     except Product.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['GET'])
+def get_cart(request):
+    try:
+        name = request.GET['username']
+        user = User.objects.get(username=name)
+        cart, created = Cart.objects.get_or_create(user=user)
+
+        price = round(cart.price, 2)
+
+        items = {}
+        for item in cart.items.all():
+            items[item.product.name] = item.price
+
+        response_data = {
+            'status': 'success',
+            'cart_items': items,
+            'cart': {'id': cart.id, 'user': cart.user.username},
+            'price': price,
+            'user': user.username
+        }
+
+        return Response(response_data)
+
+
+    except User.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'User not found'}, status=404)
+
+    except Cart.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Cart not found'}, status=404)
