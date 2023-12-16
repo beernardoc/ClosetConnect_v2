@@ -17,9 +17,8 @@ from django.urls import reverse
 
 # Rest Framework
 from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
 from app.serializers import UserSerializer, ProductSerializer, CommentSerializer, FollowerSerializer, \
     FavoriteSerializer, CartSerializer, CartItemSerializer
 
@@ -44,7 +43,8 @@ def index(request):
         show_modal = request.session.pop('show_modal', False)
 
         return render(request, 'index.html',
-                      {'user': user, 'products': OthersProducts, 'filtredProducts': filtredProducts, 'show_modal': show_modal})
+                      {'user': user, 'products': OthersProducts, 'filtredProducts': filtredProducts,
+                       'show_modal': show_modal})
     except User.DoesNotExist:
         return render(request, 'index.html', {'user': None, 'products': ls, 'filtredProducts': None})
 
@@ -82,7 +82,6 @@ def register(request):
     else:
         form = RegisterForm()
         return render(request, 'register.html', {'form': form, 'error': False})
-
 
 
 @login_required(login_url='/login')
@@ -302,7 +301,7 @@ def viewCart(request):
     user = User.objects.get(username=request.user.username)
     cart, created = Cart.objects.get_or_create(user=user)
 
-    price = round(cart.price,2)
+    price = round(cart.price, 2)
 
     return render(request, 'cart.html', {'cart_items': cart.items.all(), 'cart': cart, 'price': price, 'user': user})
 
@@ -527,9 +526,7 @@ def seller(request, username):
         return HttpResponse("Some default response")
 
 
-
 def admin_page(request):
-    """
     errorUser = False
     errorProduct = False
     user = User.objects.get(username=request.user.username)
@@ -560,7 +557,8 @@ def admin_page(request):
                 users = User.objects.all()
                 products = Product.objects.all()
             return render(request, 'admin_page.html',
-                          {'user': user, 'users': users, 'products': products, 'errorUser': errorUser, 'errorProduct': errorProduct})
+                          {'user': user, 'users': users, 'products': products, 'errorUser': errorUser,
+                           'errorProduct': errorProduct})
 
         elif "searchProduct" in request.POST:
             q = request.POST['searchProduct']
@@ -578,7 +576,8 @@ def admin_page(request):
                 products = Product.objects.all()
                 errorProduct = False
             return render(request, 'admin_page.html',
-                          {'user': user, 'users': users, 'products': products, 'errorUser': errorUser, 'errorProduct': errorProduct})
+                          {'user': user, 'users': users, 'products': products, 'errorUser': errorUser,
+                           'errorProduct': errorProduct})
 
         elif "deleteUser" in request.POST:
             user_id = request.POST['deleteUser']
@@ -591,76 +590,9 @@ def admin_page(request):
     users = User.objects.all()
     products = Product.objects.all()
     return render(request, 'admin_page.html',
-                  {'user': user, 'errorUser': errorUser, 'errorProduct': errorProduct, 'users': users, 'products': products})
-    """
+                  {'user': user, 'errorUser': errorUser, 'errorProduct': errorProduct, 'users': users,
+                   'products': products})
 
-    error_user = False
-    error_product = False
-
-    try:
-        user = User.objects.get(username=request.user.username)
-
-        if request.method == "GET":
-            if user.admin:
-                users = User.objects.all()
-                products = Product.objects.all()
-                return render(request, 'admin_page.html',
-                    {'user': user.serialize(), 'users': [u.serialize() for u in users], 'products': [p.serialize() for p in products]})
-            else:
-                return redirect('/')
-
-        if request.method == "POST":
-            if "searchUser" in request.POST:
-                q = request.POST['searchUser']
-                if q:
-                    users = User.objects.filter(username__icontains=q)
-                    if users.exists():
-                        user = users.first()
-                        products = Product.objects.all()
-                        error_user = False
-                    else:
-                        users = User.objects.all()
-                        products = Product.objects.all()
-                        error_user = True
-                else:
-                    users = User.objects.all()
-                    products = Product.objects.all()
-                return render(request, 'admin_page.html',
-                    {'user': user.serialize(), 'users': [u.serialize() for u in users], 'products': [p.serialize() for p in products], 'errorUser': error_user, 'errorProduct': error_product})
-
-            elif "searchProduct" in request.POST:
-                q = request.POST['searchProduct']
-                users = User.objects.all()
-                if q:
-                    products_by_name = Product.objects.filter(name__icontains=q)
-                    products_by_user = Product.objects.filter(user_id__username__icontains=q)
-                    products = products_by_name.union(products_by_user)
-                    if not products.exists():
-                        products = Product.objects.all()
-                        error_product = True
-                    else:
-                        error_product = False
-                else:
-                    products = Product.objects.all()
-                    error_product = False
-                return render(request, 'admin_page.html',
-                    {'user': user.serialize(), 'users': [u.serialize() for u in users], 'products': [p.serialize() for p in products], 'errorUser': error_user, 'errorProduct': error_product})
-
-            elif "deleteUser" in request.POST:
-                user_id = request.POST['deleteUser']
-                User.objects.filter(id=user_id).delete()
-                Product.objects.filter(user_id=user_id).delete()
-            elif "deleteProduct" in request.POST:
-                product_id = request.POST['deleteProduct']
-                Product.objects.filter(id=product_id).delete()
-
-        users = User.objects.all()
-        products = Product.objects.all()
-        return render(request, 'admin_page.html',
-            {'user': user.serialize(), 'errorUser': error_user, 'errorProduct': error_product, 'users': [u.serialize() for u in users], 'products': [p.serialize() for p in products]})
-
-    except User.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
 
 @login_required(login_url='/login')
 def edit_product(request, product_id):
@@ -733,7 +665,6 @@ def favorites(request):
     # Get the products that match the IDs
     favorites_products = Product.objects.filter(id__in=favorites_product_ids)
 
-
     return render(request, 'favorites.html',
                   {'favorites': favorites_products, 'user': user})
 
@@ -754,6 +685,7 @@ def get_products(request):
         return Response(serializer.data)
     except Product.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
 
 @api_view(['GET'])
 def get_followed_products(request):
@@ -776,6 +708,7 @@ def get_followed_products(request):
         return Response(serializer.data)
     except User.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
 
 @api_view(['GET'])
 def get_explore_products(request):
@@ -800,3 +733,68 @@ def get_explore_products(request):
         return Response(serializer.data)
     except User.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['POST'])
+def post_item_cart(request):
+    product_id = request.data['productID']
+    username = request.data['username']
+
+    try:
+        product = get_object_or_404(Product, id=product_id)
+        user = User.objects.get(username=username)
+
+        cart, created = Cart.objects.get_or_create(user=user)
+
+        cart_item, created = CartItem.objects.get_or_create(product=product, user=user)
+
+        if not created:
+            pass
+
+        else:
+            cart_item.price = product.price
+            cart.price += product.price
+
+            cart.items.add(cart_item)
+            cart_item.save()
+            cart.save()
+
+        print(cart.items.all())
+        print(cart.price)
+        print(cart.items.count())
+        print(cart_item)
+
+        return Response(status=status.HTTP_201_CREATED)
+    except Product.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['GET'])
+def get_cart(request):
+    try:
+        name = request.GET['username']
+        user = User.objects.get(username=name)
+        cart, created = Cart.objects.get_or_create(user=user)
+
+        price = round(cart.price, 2)
+
+        items = {}
+        for item in cart.items.all():
+            items[item.product.name] = item.price
+
+        response_data = {
+            'status': 'success',
+            'cart_items': items,
+            'cart': {'id': cart.id, 'user': cart.user.username},
+            'price': price,
+            'user': user.username
+        }
+
+        return Response(response_data)
+
+
+    except User.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'User not found'}, status=404)
+
+    except Cart.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Cart not found'}, status=404)
