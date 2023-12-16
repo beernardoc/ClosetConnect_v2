@@ -60,7 +60,25 @@ export class ProductService {
     }
   }
 
+  async deleteProduct(id: number): Promise<Response> {
+    try {
+      const url: string = this.baseUrl + "delete_product/" + id;
+      const data: Response = await fetch(url, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: id })
+      });
 
+      if (!data.ok) {
+        throw new Error(data.statusText);
+      }
+
+      return data;
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      throw error;
+    }
+  }
 
 }
 

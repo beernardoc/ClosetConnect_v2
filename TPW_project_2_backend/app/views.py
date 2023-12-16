@@ -798,3 +798,66 @@ def get_cart(request):
 
     except Cart.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Cart not found'}, status=404)
+
+@api_view(['GET'])
+def get_users(request):
+    try:
+        users = User.objects.all()
+        # the image is a file, we need to send it as a base64 string
+        image_base64 = []
+        for user in users:
+            image = product.image
+            image_base64.append(base64.b64encode(image.read()))
+        serializer = UserSerializer(users, many=True)
+        for i in range(len(serializer.data)):
+            serializer.data[i]['image'] = image_base64[i]
+
+        return Response(serializer.data)
+    except User.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['GET'])
+def get_user(request, user_id):
+    try:
+        user = User.objects.filter(id=user_id)
+        image_base64 = []
+        image = product.image
+        image_base64.append(base64.b64encode(image.read()))
+        serializer = UserSerializer(user, many=True)
+        for i in range(len(serializer.data)):
+            serializer.data[i]['image'] = image_base64[i]
+
+        return Response(serializer.data)
+
+    except User.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['DELETE'])
+def delete_user(request, user_id):
+    try:
+        user = get_object_or_404(User, id=user_id)
+        # get all the products from user
+        user_products = Product.objects.filter(user_id=user.id)
+        for product in user_products:
+            product.delete()
+
+        user.delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    except User.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'User not found'}, status=404)
+
+
+
+
+@api_view(['DELETE'])
+def delete_product(request, product_id):
+    try:
+        product = get_object_or_404(Product, id=product_id)
+        product.delete()
+
+    except Product.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Product not found'}, status=404)

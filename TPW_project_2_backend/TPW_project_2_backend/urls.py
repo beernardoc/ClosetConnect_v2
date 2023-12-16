@@ -48,6 +48,10 @@ urlpatterns = [
     path('ws/followed_products', views.get_followed_products),
     path('ws/explore_products', views.get_explore_products),
     path('ws/add_product_to_cart', views.post_item_cart),
-    path('ws/cart', views.get_cart)
+    path('ws/cart', views.get_cart),
+    path('ws/delete_product/<int:product_id>', views.delete_product),
+    path('ws/users', views.get_users),
+    path('ws/users/<int:user_id>', views.get_user),
+    path('ws/delete_user/<int:user_id>', views.delete_user)
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
