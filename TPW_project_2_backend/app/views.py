@@ -17,8 +17,9 @@ from django.urls import reverse
 
 # Rest Framework
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from app.serializers import UserSerializer, ProductSerializer, CommentSerializer, FollowerSerializer, \
     FavoriteSerializer, CartSerializer, CartItemSerializer
 
@@ -527,10 +528,8 @@ def seller(request, username):
 
 
 
-
-
-
 def admin_page(request):
+    """
     errorUser = False
     errorProduct = False
     user = User.objects.get(username=request.user.username)
@@ -593,7 +592,75 @@ def admin_page(request):
     products = Product.objects.all()
     return render(request, 'admin_page.html',
                   {'user': user, 'errorUser': errorUser, 'errorProduct': errorProduct, 'users': users, 'products': products})
+    """
 
+    error_user = False
+    error_product = False
+
+    try:
+        user = User.objects.get(username=request.user.username)
+
+        if request.method == "GET":
+            if user.admin:
+                users = User.objects.all()
+                products = Product.objects.all()
+                return render(request, 'admin_page.html',
+                    {'user': user.serialize(), 'users': [u.serialize() for u in users], 'products': [p.serialize() for p in products]})
+            else:
+                return redirect('/')
+
+        if request.method == "POST":
+            if "searchUser" in request.POST:
+                q = request.POST['searchUser']
+                if q:
+                    users = User.objects.filter(username__icontains=q)
+                    if users.exists():
+                        user = users.first()
+                        products = Product.objects.all()
+                        error_user = False
+                    else:
+                        users = User.objects.all()
+                        products = Product.objects.all()
+                        error_user = True
+                else:
+                    users = User.objects.all()
+                    products = Product.objects.all()
+                return render(request, 'admin_page.html',
+                    {'user': user.serialize(), 'users': [u.serialize() for u in users], 'products': [p.serialize() for p in products], 'errorUser': error_user, 'errorProduct': error_product})
+
+            elif "searchProduct" in request.POST:
+                q = request.POST['searchProduct']
+                users = User.objects.all()
+                if q:
+                    products_by_name = Product.objects.filter(name__icontains=q)
+                    products_by_user = Product.objects.filter(user_id__username__icontains=q)
+                    products = products_by_name.union(products_by_user)
+                    if not products.exists():
+                        products = Product.objects.all()
+                        error_product = True
+                    else:
+                        error_product = False
+                else:
+                    products = Product.objects.all()
+                    error_product = False
+                return render(request, 'admin_page.html',
+                    {'user': user.serialize(), 'users': [u.serialize() for u in users], 'products': [p.serialize() for p in products], 'errorUser': error_user, 'errorProduct': error_product})
+
+            elif "deleteUser" in request.POST:
+                user_id = request.POST['deleteUser']
+                User.objects.filter(id=user_id).delete()
+                Product.objects.filter(user_id=user_id).delete()
+            elif "deleteProduct" in request.POST:
+                product_id = request.POST['deleteProduct']
+                Product.objects.filter(id=product_id).delete()
+
+        users = User.objects.all()
+        products = Product.objects.all()
+        return render(request, 'admin_page.html',
+            {'user': user.serialize(), 'errorUser': error_user, 'errorProduct': error_product, 'users': [u.serialize() for u in users], 'products': [p.serialize() for p in products]})
+
+    except User.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 @login_required(login_url='/login')
 def edit_product(request, product_id):
