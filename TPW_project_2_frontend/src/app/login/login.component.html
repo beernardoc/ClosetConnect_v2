@@ -28,6 +28,10 @@
           <div *ngIf="loginForm.get('password')?.errors?.['minlength']">Password must be at least 8 characters long.</div>
         </div>
       </div>
+      <!-- Error for invalid credentials -->
+      <div *ngIf="invalidCredentials" class="text-danger">
+        Invalid credentials.
+      </div>
       <button type="submit" class="btn btn-primary">Log In</button>
     </form>
 

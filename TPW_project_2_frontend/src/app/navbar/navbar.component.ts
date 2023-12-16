@@ -1,8 +1,9 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, inject, OnInit, signal} from '@angular/core';
 import { Router } from '@angular/router';
 import { CurrentUserService } from '../current-user.service';
 import { User } from '../user';
 import {CommonModule} from "@angular/common";
+import {LogoutUserService} from "../logout-user.service";
 
 @Component({
   selector: 'app-navbar',
@@ -25,6 +26,22 @@ export class NavbarComponent {
   };
 
   currentUserService: CurrentUserService = inject(CurrentUserService);
+  logoutUserService: LogoutUserService = inject(LogoutUserService);
+  logout = () => {
+    this.logoutUserService.logout()
+      .then((success: boolean) => {
+        if (success) {
+          // redirect to home page
+          window.location.href = "/";
+        } else {
+          // Display error message, user does not exist
+          console.log("Error logging out");
+        }
+      })
+      .catch((error) => {
+        console.error('Error logging out:', error);
+      });
+  }
 
   constructor() {
     this.currentUserService.getCurrentUser()

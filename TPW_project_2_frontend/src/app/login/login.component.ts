@@ -13,6 +13,7 @@ import { LoginUserService } from '../login-user.service';
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   loginUserService: LoginUserService = inject(LoginUserService);
+  invalidCredentials: boolean = false;
 
   constructor(private formBuilder: FormBuilder) { }
 
@@ -21,6 +22,11 @@ export class LoginComponent implements OnInit {
       username: ['', [Validators.required, Validators.minLength(3)]],
       password: ['', Validators.required]
     });
+
+    // if the user is already logged in, redirect to home page
+    if (localStorage.getItem("id") !== null && localStorage.getItem("id") !== "0") {
+      window.location.href = "/";
+    }
   }
 
   onSubmit(): void {
@@ -35,11 +41,13 @@ export class LoginComponent implements OnInit {
             // redirect to home page
             window.location.href = "/";
           } else {
-            alert("Invalid username or password");
+            // Display error message, user does not exist
+            this.invalidCredentials = true;
           }
         })
         .catch((error) => {
           console.error('Error logging in:', error);
+          this.invalidCredentials = true;
         });
 
     } else {
