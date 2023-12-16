@@ -16,6 +16,8 @@ export class IndexComponent {
   explore: Product[] = [];
   productService: ProductService = inject(ProductService);
 
+
+
 constructor() {
     this.productService.getProducts().then((products: Product[]) => {
       this.explore = products;
@@ -24,13 +26,16 @@ constructor() {
       }
     });
 
-  // this.productService.getFollowedProducts().then((products: Product[]) => {
-  //   this.followings = products;
-  //   console.log(this.followings);
-  // });
+    this.productService.getFollowedProducts().then((products: Product[]) => {
+     this.followings = products;
+    });
   // this.productService.getExploreProducts().then((products: Product[]) => {
   //   this.explore = products;
   //   console.log(this.explore);
-  // });
+  // }
+
+
+
+
   }
 }

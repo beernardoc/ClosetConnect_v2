@@ -1,0 +1,56 @@
+  <ng-container *ngIf="products.length == 0">
+    <div class="d-flex justify-content-center align-items-center" style="height: 50vh;">
+      <div class="text-center">
+        <h1 class="text-muted">Your cart is empty</h1>
+        <a href="/" class="btn btn-success mt-3">Buy now
+        </a>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="products.length > 0">
+    <div class="col-md-12">
+      <h1 class="text-muted">Your choices</h1>
+      <hr>
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th scope="col">Product</th>
+            <th scope="col">Price</th>
+          </tr>
+          </thead>
+          <tbody>
+
+          <ng-container *ngFor="let item of products ">
+          <tr>
+            <td>{{ item['key'] }}</td>
+            <td>{{ item['value'] }}€</td>
+            <td>
+              <form method="post" action="">
+                <button type="button" class="btn btn-danger">X</button>
+              </form>
+            </td>
+          </tr>
+          </ng-container>
+
+
+          </tbody>
+        </table>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+
+          <h3 >Total: {{ price }}€</h3>
+
+        </div>
+      </div>
+      <hr>
+      <div class="row d-flex">
+        <div class="col-md-12">
+          <a class="btn btn-success btn-lg">Finish </a>
+        </div>
+      </div>
+    </div>
+
+
+  </ng-container>

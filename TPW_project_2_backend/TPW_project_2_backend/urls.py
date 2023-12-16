@@ -55,5 +55,9 @@ urlpatterns = [
     path('ws/user/<int:user_id>', views.get_user),
     path('ws/loginUser', views.get_user_with_username_and_password),
     path('ws/registerUser', views.new_user),
+    path('ws/add_product_to_cart', views.post_item_cart),
+    path('ws/cart', views.get_cart),
+    path('ws/delete_product/<int:product_id>', views.delete_product),
+    path('ws/delete_user/<int:user_id>', views.delete_user)
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
