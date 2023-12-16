@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {Product} from "./product";
+import {base64toBlob} from "./utils";
 
 @Injectable({
   providedIn: 'root'
@@ -33,23 +34,4 @@ export class ProductService {
     const data: Response = await fetch(url);
     return await data.json() ?? [];
   }
-}
-
-// Function to convert a base64 string to a Blob
-function base64toBlob(base64Data: string, contentType: string): Blob {
-  const sliceSize = 512;
-  const byteCharacters = atob(base64Data);
-  const byteArrays: Uint8Array[] = [];
-
-  for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-    const slice = byteCharacters.slice(offset, offset + sliceSize);
-    const byteNumbers = new Array(slice.length);
-    for (let i = 0; i < slice.length; i++) {
-      byteNumbers[i] = slice.charCodeAt(i);
-    }
-    const byteArray = new Uint8Array(byteNumbers);
-    byteArrays.push(byteArray);
-  }
-
-  return new Blob(byteArrays, { type: contentType });
 }

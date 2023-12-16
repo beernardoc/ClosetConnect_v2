@@ -47,5 +47,12 @@ urlpatterns = [
     path('ws/products', views.get_products),
     path('ws/followed_products', views.get_followed_products),
     path('ws/explore_products', views.get_explore_products),
+    path('ws/register', views.registerREST),
+    path('ws/login', views.loginREST),
+    path('ws/current_user', views.current_user),
+    path('ws/no_user_image', views.no_user_image),
+    path('ws/users', views.get_users),
+    path('ws/user/<int:user_id>', views.get_user),
+    path('ws/loginUser', views.get_user_with_username_and_password),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

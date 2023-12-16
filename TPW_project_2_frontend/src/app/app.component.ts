@@ -3,14 +3,16 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import {ProductsComponent} from "./products/products.component";
 import {IndexComponent} from "./index/index.component";
+import {NavbarComponent} from "./navbar/navbar.component";
+import {FooterComponent} from "./footer/footer.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, ProductsComponent, IndexComponent],
+  imports: [CommonModule, RouterOutlet, ProductsComponent, IndexComponent, NavbarComponent, FooterComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'TPW_project_2_frontend';
+  title = 'ClosetConnect';
 }

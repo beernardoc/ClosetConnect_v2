@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'bootstrap5',
     'django_bootstrap_icons',
     'rest_framework',
+    'rest_framework.authtoken',
     'corsheaders',
 ]
 
@@ -150,3 +151,5 @@ REST_FRAMEWORK = {
 
 # CORS CONFIG
 CORS_ORIGIN_ALLOW_ALL = True
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False

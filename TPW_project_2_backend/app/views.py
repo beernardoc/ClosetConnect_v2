@@ -1,4 +1,5 @@
 import base64
+import json
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login as auth_login
@@ -17,11 +18,13 @@ from django.urls import reverse
 
 # Rest Framework
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from app.serializers import UserSerializer, ProductSerializer, CommentSerializer, FollowerSerializer, \
     FavoriteSerializer, CartSerializer, CartItemSerializer
 
+from rest_framework.authtoken.models import Token
+from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
 
@@ -732,4 +735,94 @@ def get_explore_products(request):
 
         return Response(serializer.data)
     except User.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+# Authenticating a user, REST API
+@api_view(['POST'])
+def loginREST(request):
+    username = request.POST['username']
+    password = request.POST['password']
+    user = authenticate(username=username, password=password)
+    if user is not None and user.is_active:
+        serializer = UserSerializer(user)
+        auth_login(request, user)
+        return Response(serializer.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+# Registering a user, REST API
+@api_view(['POST'])
+def registerREST(request):
+    serializer = UserSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        user = authenticate(username=request.data['username'], password=request.data['password'])
+        auth_login(request, user)
+        # Create user in our database
+        user = User.objects.create(username=request.data['username'], email=request.data['email'],
+                                   password=request.data['password'],
+                                   name=request.data['name'])
+        user.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+# Current user, REST API
+@api_view(['GET'])
+def current_user(request):
+    user = request.user
+    print(user)
+    if user.is_authenticated:
+        # get the user from the database
+        user = User.objects.get(username=user.username)
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+    return Response(status=status.HTTP_404_NOT_FOUND)
+
+# No user image, REST API
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def no_user_image(request):
+    # send the image as a base64 string
+    image = open('app/static/images/no_user_image.png', 'rb')
+    image_read = image.read()
+    image_64_encode = base64.b64encode(image_read)
+    image.close()
+    return Response(image_64_encode)
+
+# get the users from the database, REST API
+@api_view(['GET'])
+def get_users(request):
+    try:
+        users = User.objects.all()
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer.data)
+    except User.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+# get a user from the database, REST API
+@api_view(['GET'])
+def get_user(request, user_id):
+    try:
+        user = User.objects.get(id=user_id)
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+    except User.DoesNotExist:
+        print("User does not exist")
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+# get user from the database with username and password, REST API
+@api_view(['POST'])
+def get_user_with_username_and_password(request):
+    try:
+        data = json.loads(request.body)
+        username = data['username']
+        password = data['password']
+
+        user = User.objects.get(username=username, password=password)
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+    except User.DoesNotExist:
+        print("User does not exist")
         return Response(status=status.HTTP_404_NOT_FOUND)
