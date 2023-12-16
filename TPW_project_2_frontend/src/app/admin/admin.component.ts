@@ -38,6 +38,7 @@ export class AdminComponent {
   }
 
   searchUser() {
+    this.users = [];
     this.userService.getUsers().then((users: User[]) => {
       for (let user of users) {
         if (user.username.includes(this.userSearchText)) {
@@ -52,6 +53,7 @@ export class AdminComponent {
   }
 
   searchProduct() {
+    this.products = [];
     this.productService.getProducts().then((products: Product[]) => {
       for (let product of products) {
         if (product.name.includes(this.productSearchText)) {
@@ -66,9 +68,11 @@ export class AdminComponent {
 
   deleteUser(user: User) {
     this.userService.deleteUser(user.id);
+    location.reload();
   }
 
   deleteProduct(product: Product) {
     this.productService.deleteProduct(product.id);
+    location.reload();
   }
 }

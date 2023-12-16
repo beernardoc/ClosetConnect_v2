@@ -15,7 +15,7 @@ export class UserService {
     const data: Response = await fetch(url);
     // the image is a base64 string
     // we need to convert it to a blob
-    // and then to a url
+    // and then to an url
     const users: User[] = await data.json() ?? [];
     for (let user of users) {
       const blob: Blob = base64toBlob(user.image, "image/jpg");

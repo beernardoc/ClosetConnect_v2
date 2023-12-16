@@ -1,5 +1,5 @@
 <!-- admin.component.html -->
-<div class="container">
+<ng-container>
   <h1>Admin Panel</h1>
 
   <!-- Users Section -->
@@ -45,12 +45,12 @@
         </div>
       </div>
       <div class="d-flex" *ngIf="!user.admin">
-        <a class="btn btn-success" routerLink="'/profile/' + user.username">View</a>
+        <a class="btn btn-success" [routerLink]="'/profile/' + user.username">View</a>
         <form action="." method="post" style="padding-left: 5px;">
-          <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteUserModal{{ user.id }}">Ban User</button>
+          <button type="button" class="btn btn-danger" (click)="deleteUser(user)"> <!-- data-bs-toggle="modal" data-bs-target="#deleteUserModal{{ user.id }}" --> Ban User</button>
         </form>
       </div>
-      <!-- Angular Modal for deleting a user -->
+      <!-- Angular Modal for deleting a user
       <div class="modal fade" [id]="'deleteUserModal' + user.id" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -69,9 +69,10 @@
           </div>
         </div>
       </div>
+      -->
     </li>
   </ul>
-
+  <br>
   <!-- Products Section -->
   <div class="d-flex justify-content-between">
     <div>
@@ -110,10 +111,10 @@
       <div class="d-flex">
         <a class="btn btn-success" [routerLink]="'/product/' + product.id">View</a>
         <form action="." method="post" style="padding-left: 5px;">
-          <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteProductModal{{ product.id }}">Delete Product</button>
+          <button type="button" class="btn btn-danger" (click)="deleteProduct(product)"> <!-- data-bs-toggle="modal" data-bs-target="#deleteProductModal{{ product.id }}"-->Delete Product</button>
         </form>
       </div>
-      <!-- Angular Modal for deleting a product -->
+      <!-- Angular Modal for deleting a product
       <div class="modal fade" [id]="'deleteProductModal' + product.id" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -132,6 +133,7 @@
           </div>
         </div>
       </div>
+      -->
     </li>
   </ul>
-</div>
+</ng-container>

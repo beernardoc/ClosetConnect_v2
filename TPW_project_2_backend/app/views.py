@@ -806,7 +806,13 @@ def get_users(request):
         # the image is a file, we need to send it as a base64 string
         image_base64 = []
         for user in users:
-            image = product.image
+            image = user.image
+            if image is None or len(image) == 0:
+                #print("No image")
+                image = '../media/user_no_picture_png'
+
+
+            #print("User image: ", image)
             image_base64.append(base64.b64encode(image.read()))
         serializer = UserSerializer(users, many=True)
         for i in range(len(serializer.data)):
@@ -822,7 +828,8 @@ def get_user(request, user_id):
     try:
         user = User.objects.filter(id=user_id)
         image_base64 = []
-        image = product.image
+        image = user.image
+        print(image)
         image_base64.append(base64.b64encode(image.read()))
         serializer = UserSerializer(user, many=True)
         for i in range(len(serializer.data)):
@@ -858,6 +865,8 @@ def delete_product(request, product_id):
     try:
         product = get_object_or_404(Product, id=product_id)
         product.delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     except Product.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Product not found'}, status=404)

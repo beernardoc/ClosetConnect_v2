@@ -15,7 +15,7 @@ user1 = User.objects.create(
     email='joao@example.com',
     password='user1234',  # Você deve usar um método seguro para armazenar senhas reais
     admin=False,  # Este usuário é um administrador
-    image='users/joao.png',
+    image='users/joao.jpg',
     sold=23
 )
 authenticate(username='joao', password='user1234')
@@ -28,7 +28,7 @@ user2 = User.objects.create(
     email='jose@example.com',
     password='user1234',  # Você deve usar um método seguro para armazenar senhas reais
     admin=False,  # Este usuário não é um administrador
-    image='users/jose.png',
+    image='users/jose.jpg',
     sold=12
 )
 authenticate(username='jose', password='user1234')
