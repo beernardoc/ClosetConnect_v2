@@ -3,6 +3,7 @@ import json
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login as auth_login
+from django.core.files.base import ContentFile
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from app.forms import RegisterForm, UploadUserProfilePicture, UpdateProfile, UpdatePassword, ProductForm, CommentForm, \
@@ -941,3 +942,55 @@ def delete_product(request, product_id):
 
     except Product.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Product not found'}, status=404)
+
+# update a user's image, REST API
+@api_view(['POST'])
+def update_user_image(request, user_id):
+    try:
+        data = json.loads(request.body)
+        image = data['image']
+        # image is a base64 string, we need to convert it to a file
+        image += '=' * (-len(image) % 4)
+        image = base64.b64decode(image)
+        user = User.objects.get(id=user_id)
+        user.image = image
+        user.save()
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+    except User.DoesNotExist:
+        print("User does not exist")
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+# update a user, REST API
+@api_view(['POST'])
+def update_user(request, user_id):
+    try:
+        data = json.loads(request.body)
+        username = data['username']
+        name = data['name']
+        email = data['email']
+        password = data['password']
+        admin = data['admin']
+        image = data['image']
+        # image is a base64 string
+        image += '=' * (-len(image) % 4)
+        image = base64.b64decode(image)
+        # make it a file
+        image = ContentFile(image, f'{username}.png')
+        description = data['description']
+        sold = data['sold']
+        user = User.objects.get(id=user_id)
+        user.username = username
+        user.name = name
+        user.email = email
+        user.password = password
+        user.admin = admin
+        user.image = image
+        user.description = description
+
+        user.save()
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+    except User.DoesNotExist:
+        print("User does not exist")
+        return Response(status=status.HTTP_404_NOT_FOUND)

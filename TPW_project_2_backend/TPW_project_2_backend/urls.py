@@ -58,6 +58,8 @@ urlpatterns = [
     path('ws/add_product_to_cart', views.post_item_cart),
     path('ws/cart', views.get_cart),
     path('ws/delete_product/<int:product_id>', views.delete_product),
-    path('ws/delete_user/<int:user_id>', views.delete_user)
+    path('ws/delete_user/<int:user_id>', views.delete_user),
+    path('ws/update_user_image/<int:user_id>', views.update_user_image),
+    path('ws/update_user/<int:user_id>', views.update_user),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -7,7 +7,7 @@
           <div class="col-md-3 text-center mb-5">
             <div class="d-flex">
               <img src="{{ user.image_base64}}"
-                   style="width: 10vw; height: 9vw; object-fit: cover"
+                   style="width: 10vw; height: 10vw; object-fit: cover"
                    class="rounded-circle" alt="">
             </div>
           </div>
@@ -26,13 +26,17 @@
                 <p>No description yet, write something about yourself!</p>
               </ng-template>
             </div>
-            <form method="post" action="." enctype="multipart/form-data">
+            <form [formGroup]="updatePicForm" (ngSubmit)="onSubmitPic()">
               <div class="row mb-4">
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group">
                       <!--Update Profile Picture-->
-                      <input type="file" name="image" accept="image/*" class="form-control">
+                      <input type="file" name="image" accept="image/*" class="form-control" formControlName="image" (change)="onFileSelected($event)">
+                      <div *ngIf="updatePicForm.get('image')?.errors?.['required'] && updatePicForm.get('image')?.touched" class="alert alert-danger"
+                            style="margin-top: 5px; padding-top: 5px; padding-bottom: 5px">
+                        Please select an image.
+                      </div>
                     </div>
                   </div>
                   <div class="col-md-6">

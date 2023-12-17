@@ -7,3 +7,13 @@ export function base64toBlob(base64Data: string, contentType: string): Blob {
   }
   return new Blob(byteArrays, { type: contentType });
 }
+
+// Function to convert a string of a file to a base64 string
+export function getBase64(file: File): Promise<string> {
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (error) => reject(error);
+  });
+}
