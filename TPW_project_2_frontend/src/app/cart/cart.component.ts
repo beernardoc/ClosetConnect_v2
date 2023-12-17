@@ -24,7 +24,12 @@ export class CartComponent {
       this.products = this.convertObjectToArray(result['cart_items']);
       this.price = result['price'];
       this.user = result['user'];
+      console.log("aqui", result);
     });
+
+
+
+
   }
 
   private convertObjectToArray(obj: any): { key: string, value: any }[] {

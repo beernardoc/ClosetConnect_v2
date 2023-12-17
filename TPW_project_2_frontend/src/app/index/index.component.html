@@ -34,9 +34,9 @@
               </a>
             </div>
             <div class="col-4">
-              <a class="btn btn-success w-100 p-3 rounded-0 text-center" (click)="productService.addProductToCart(product.id)" >
+              <a class="btn btn-success w-100 p-3 rounded-0 text-center" data-toggle="modal" data-target="#buyModal" (click)="productService.addProductToCart(product.id)" >
                 <i class="bi bi-cart-plus"></i>
-                <span class="align-middle">Buy</span>
+                <span class="align-middle"> Buy</span>
               </a>
             </div>
           </div>
@@ -45,6 +45,8 @@
     </ng-container>
   </ng-container>
 </div>
+
+
 
 <!--Explore-->
 <h1 class="text-muted">Explore <i class="bi bi-compass-fill"></i></h1>
@@ -76,7 +78,7 @@
           <div class="col-4">
             <a class="btn btn-success w-100 p-3 rounded-0 text-center" (click)="productService.addProductToCart(product.id)" >
               <i class="bi bi-cart-plus"></i>
-              <span class="align-middle">Buy</span>
+              <span class="align-middle"> Buy</span>
             </a>
 
           </div>

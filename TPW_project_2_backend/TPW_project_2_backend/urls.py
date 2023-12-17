@@ -59,12 +59,11 @@ urlpatterns = [
     path('ws/cart', views.get_cart),
     path('ws/delete_product/<int:product_id>', views.delete_product),
     path('ws/delete_user/<int:user_id>', views.delete_user),
-    #TODO
+    path('ws/update_cart', views.update_cart),
     path('ws/current_user', views.current_user),
     path('ws/favorites', views.get_favorites),
     path('ws/favorite_products', views.get_favorite_products),
     path('ws/add_favorite', views.add_favorite),
     path('ws/remove_favorite/<int:favorite_id>', views.remove_favorite)
-
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
