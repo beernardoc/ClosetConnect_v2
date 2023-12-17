@@ -653,7 +653,7 @@ def process_payment(request):
 
 @login_required(login_url='/login')
 def favorites(request):
-    # Get the user
+    # Get the user yes
     user = request.user
 
     # Get the user ID
@@ -954,3 +954,83 @@ def delete_product(request, product_id):
 
     except Product.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Product not found'}, status=404)
+
+@api_view(['GET'])
+def current_user(request):
+    try:
+        name = request.GET['username']
+        user = User.objects.get(username=name)
+        serializer = UserSerializer(user)
+
+        return Response(serializer.data)
+
+    except User.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'User not found'}, status=404)
+
+@api_view(['GET'])
+def get_favorites(request):
+    try:
+        favorites = Favorite.objects.all()
+        serializer = FavoriteSerializer(favorites, many=True)
+
+        return Response(serializer.data)
+
+    except Favorite.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Favorites not found'}, status=404)
+
+@api_view(['GET'])
+def get_favorite_products(request):
+    try:
+        products = []
+        name = request.GET['username']
+        user = User.objects.get(username=name)
+        favorites = Favorite.objects.filter(user_id=user.id)
+        for favorite in favorites:
+            products.append(Product.objects.filter(id=favorite.product_id))
+        serializer = ProductSerializer(products, many=True)
+
+        return Response(serializer.data)
+
+    except Favorite.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Favorites not found'}, status=404)
+
+    except Product.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Product not found'}, status=404)
+
+    except User.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'User not found'}, status=404)
+
+
+@api_view(['POST'])
+def add_favorite(request):
+    data = request.data['favourite']
+
+    try:
+        favorite, created = Favorite.objects.get_or_create(user_id=data.user_id, product_id=data.product_id)
+
+        if not created:
+            pass
+
+        else:
+            favorite.user_id = request.user.id
+            favorite.product_id = data.product_id
+            favorite.save()
+        return Response(status=status.HTTP_201_CREATED)
+
+    except Favorite.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['DELETE'])
+def remove_favorite(request, favourite_id):
+    try:
+        favorite = get_object_or_404(Favorite, id=favourite_id)
+        favorite.delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    except Favorite.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Product not found'}, status=404)
+
+
+
+
