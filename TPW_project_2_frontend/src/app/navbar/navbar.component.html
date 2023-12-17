@@ -1,7 +1,7 @@
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-3" style="background-color: #add8e6; height: 80px;">
   <div class="container-fluid">
-    <a class="navbar-brand" href="/">
+    <a class="navbar-brand" routerLink="/">
       <span style="font-size: 1.5rem; margin-right: 5px; color: #ecf0f1;">ClosetConnect</span>
     </a>
     <button class="navbar-toggler" type="button" data-mdb-toggle="collapse"
@@ -13,7 +13,7 @@
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <!--{% if user %}-->
         <li class="nav-item">
-          <a class="nav-link" href="/account/sell">
+          <a class="nav-link" routerLink="/account/sell">
             <span class="glyphicon glyphicon-usd"></span> New Product
           </a>
         </li>
@@ -23,7 +23,7 @@
 
       <ul class="navbar-nav mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link" href="/view_cart"><i class="bi bi-cart-fill"></i></a>
+          <a class="nav-link" routerLink="/view_cart"><i class="bi bi-cart-fill"></i></a>
         </li>
       </ul>
 
@@ -33,7 +33,7 @@
         <ul class="navbar-nav d-flex flex-row ms-auto me-3">
           <!--            {% if user.admin %}-->
           <!--            <li class="nav-item">-->
-          <!--              <a class="nav-link" href="/adminpage">Admin</a>-->
+          <!--              <a class="nav-link" routerLink="/adminpage">Admin</a>-->
           <!--            </li>-->
           <!--            {% endif %}-->
 
@@ -49,25 +49,25 @@
               </a>
               <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown1">
 
-                <li><a class="dropdown-item" href="/account/profile">My Account</a></li>
+                <li><a class="dropdown-item" routerLink="/account/profile">My Account</a></li>
 
 
-                <li><a class="dropdown-item" href="/account/favorites">Favorites</a></li>
-                <li><a class="dropdown-item" href="/account/settings">Settings</a></li>
+                <li><a class="dropdown-item" routerLink="/account/favorites">Favorites</a></li>
+                <li><a class="dropdown-item" routerLink="/account/settings">Settings</a></li>
                 <li>
                   <hr class="dropdown-divider" />
                 </li>
                 <li>
-                  <a class="dropdown-item" href="/" style="color: red" (click)="logout()">Log Out</a>
+                  <a class="dropdown-item" routerLink="/" style="color: red" (click)="logout()">Log Out</a>
                 </li>
             </ul>
           </ng-container>
           <ng-container *ngIf="user.id == 0">
             <li class="nav-item">
-              <a class="nav-link" href="/login">Log In</a>
+              <a class="nav-link" routerLink="/login">Log In</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/register">Sign Up</a>
+              <a class="nav-link" routerLink="/register">Sign Up</a>
             </li>
           </ng-container>
         </ul>

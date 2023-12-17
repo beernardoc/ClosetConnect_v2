@@ -1,5 +1,5 @@
 import {Component, inject, OnInit, signal} from '@angular/core';
-import { Router } from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import { CurrentUserService } from '../current-user.service';
 import { User } from '../user';
 import {CommonModule} from "@angular/common";
@@ -8,7 +8,7 @@ import {LogoutUserService} from "../logout-user.service";
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
@@ -17,6 +17,7 @@ export class NavbarComponent {
     id: 0,
     username: "",
     name: "",
+    email: "",
     password: "",
     admin: false,
     image: "",

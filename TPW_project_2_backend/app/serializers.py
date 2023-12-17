@@ -8,7 +8,7 @@ class UserSerializer(serializers.ModelSerializer):
     image_base64 = serializers.SerializerMethodField()
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'password', 'admin', 'image', 'description', 'sold', 'image_base64')
+        fields = ('id', 'username', 'name', 'email', 'password', 'admin', 'image', 'description', 'sold', 'image_base64')
 
     def get_image_base64(self, obj):
         image = obj.image
