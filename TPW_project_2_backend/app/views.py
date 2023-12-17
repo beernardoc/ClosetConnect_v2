@@ -676,11 +676,14 @@ def favorites(request):
 def get_products(request):
     try:
         products = Product.objects.all()
+        #print("Products found: ", products)
         # the image is a file, we need to send it as a base64 string
         image_base64 = []
         for product in products:
+            #print(product.image)
             image = product.image
             image_base64.append(base64.b64encode(image.read()))
+
         serializer = ProductSerializer(products, many=True)
         for i in range(len(serializer.data)):
             serializer.data[i]['image'] = image_base64[i]
@@ -862,7 +865,17 @@ def get_cart(request):
 def get_users(request):
     try:
         users = User.objects.all()
+        #print("Users found: ", users)
+        image_base64 = []
+        for user in users:
+            # print(user.image)
+            # print("User Trying: ", user, " and is image: ", user.image)
+            image = user.image
+            image_base64.append(base64.b64encode(image.read()))
+            # print("user did it: ", user)
         serializer = UserSerializer(users, many=True)
+        for i in range(len(serializer.data)):
+            serializer.data[i]['image'] = image_base64[i]
         return Response(serializer.data)
     except User.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
