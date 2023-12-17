@@ -31,19 +31,33 @@ export class AccountSettingsComponent {
   currentUserService: CurrentUserService = new CurrentUserService();
 
   updatePicForm!: FormGroup;
+  updateProfileForm!: FormGroup;
   selectedFile!: File;
 
   constructor(private formBuilder: FormBuilder) {
     this.currentUserService.getCurrentUser()
       .then((user: User) => {
         this.user = user;
-        })
+        this.updateProfileForm.patchValue({
+          username: this.user.username,
+          name: this.user.name,
+          email: this.user.email,
+          description: this.user.description
+        });
+      })
       .catch((error) => {
         console.error('Error fetching current user:', error);
       });
 
     this.updatePicForm = this.formBuilder.group({
       image: ['', [Validators.required]]
+    });
+
+    this.updateProfileForm = this.formBuilder.group({
+      username: [this.user.username, [Validators.required]],
+      name: [this.user.name, [Validators.required]],
+      email: [this.user.email, [Validators.required, Validators.email]],
+      description: [this.user.description]
     });
   }
 
@@ -81,6 +95,36 @@ export class AccountSettingsComponent {
       console.log('Invalid form submitted');
     }
   }
+
+  onSubmitProfile(): void {
+    if (this.updateProfileForm.valid) {
+      this.user.username = this.updateProfileForm.value.username;
+      this.user.name = this.updateProfileForm.value.name;
+      this.user.email = this.updateProfileForm.value.email;
+      this.user.description = this.updateProfileForm.value.description;
+      this.currentUserService.updateProfile(this.user)
+        .then((success: boolean) => {
+          if (success) {
+            // reload page
+            window.location.reload();
+          } else {
+            // Display error message, user does not exist
+            console.log("Error updating user");
+          }
+        })
+        .catch((error) => {
+          console.error('Error updating user:', error);
+        });
+    }
+    else {
+      // Check if any of the fields are dirty (touched or modified)
+      this.updateProfileForm.markAllAsTouched();
+      console.log('Invalid form submitted');
+      console.log(this.updateProfileForm);
+    }
+  }
+
+
 
   onFileSelected(event: any) {
     this.selectedFile = event.target.files[0];

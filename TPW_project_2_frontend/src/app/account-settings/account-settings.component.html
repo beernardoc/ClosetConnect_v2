@@ -50,40 +50,30 @@
           </div>
         </div>
         <hr class="my-4" />
-        <form action="." method="post" style="display: inline;">
+        <form [formGroup]="updateProfileForm" (ngSubmit)="onSubmitProfile()">
           <div class="form-row">
-<!--            {{ profile_form.as_div }}-->
-            <!-- Update Profile -->
-
-<!--            <div class="form-group col-md-6">-->
               <label for="inputName">Name</label>
-              <input type="text" class="form-control" id="inputName" name="name" value="{{ user.name }}">
+              <input type="text" class="form-control" id="inputName" name="name" value="{{ user.name }}" formControlName="name">
 
               <label for="inputUsername">Username</label>
-              <input type="text" class="form-control" id="inputUsername" name="username" value="{{ user.username }}">
+              <input type="text" class="form-control" id="inputUsername" name="username" value="{{ user.username }}" formControlName="username">
 
               <label for="inputEmail">Email</label>
-              <input type="email" class="form-control" id="inputEmail" name="email" value="{{ user.email }}">
+              <input type="email" class="form-control" id="inputEmail" name="email" value="{{ user.email }}" formControlName="email">
 
               <label for="inputDescription">Description</label>
-              <textarea class="form-control" id="inputDescription" name="description" rows="3" placeholder="Write something about yourself..." style="resize: none">{{ user.description }}</textarea>
-
-<!--            </div>-->
+              <textarea class="form-control" id="inputDescription" name="description" rows="3" placeholder="Write something about yourself..." style="resize: none" formControlName="description">{{ user.description }}</textarea>
           </div>
           <hr class="my-4" />
-<!--          {% if error %}-->
-<!--          <p style="color: red">{{ error }}</p>-->
-<!--          {% elif success %}-->
-<!--          <p style="color: green">{{ success }}</p>-->
-<!--          {% endif %}-->
           <input type="submit" class="btn btn-primary" name="profile_change" value="Save Change" />
+
+          <button type="button" name="password_change" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#firstModal" style="margin-left: 10px">
+            Change Password
+          </button>
+          <button type="button" name="delete_account" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#secondModal" style="margin-left: 10px">
+            Delete Account
+          </button>
         </form>
-        <button type="button" name="password_change" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#firstModal" style="margin-left: 10px">
-          Change Password
-        </button>
-        <button type="button" name="delete_account" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#secondModal" style="margin-left: 10px">
-          Delete Account
-        </button>
 
         <!-- Password Modal -->
         <div class="modal fade" id="firstModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">

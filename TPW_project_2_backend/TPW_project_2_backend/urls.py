@@ -61,5 +61,6 @@ urlpatterns = [
     path('ws/delete_user/<int:user_id>', views.delete_user),
     path('ws/update_user_image/<int:user_id>', views.update_user_image),
     path('ws/update_user/<int:user_id>', views.update_user),
+    path('ws/update_profile/<int:user_id>', views.update_profile),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -994,3 +994,26 @@ def update_user(request, user_id):
     except User.DoesNotExist:
         print("User does not exist")
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+# update the user's profile, REST API
+@api_view(['PUT'])
+def update_profile(request, user_id):
+    try:
+        data = json.loads(request.body)
+        name = data['name']
+        username = data['username']
+        email = data['email']
+        description = data['description']
+
+        user = User.objects.get(id=user_id)
+        user.name = name
+        user.username = username
+        user.email = email
+        user.description = description
+        user.save()
+
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+    except User.DoesNotExist:
+        print("User does not exist")
+        return Response(status=status.HTTP_404_NOT_FOUND)

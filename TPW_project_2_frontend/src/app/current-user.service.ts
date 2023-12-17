@@ -68,4 +68,23 @@ export class CurrentUserService {
     });
     return await data.json() ?? false;
   }
+
+  async updateProfile(user: User): Promise<boolean> {
+    const url: string = this.baseUrl + "update_profile/" + user.id;
+    const data: Response = await fetch(url, {
+      method: 'PUT',
+      body: JSON.stringify(
+        {
+          username: user.username,
+          name: user.name,
+          email: user.email,
+          description: user.description
+        }
+      ),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    return await data.json() ?? false;
+  }
 }
