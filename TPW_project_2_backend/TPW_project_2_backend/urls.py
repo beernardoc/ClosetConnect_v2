@@ -62,5 +62,11 @@ urlpatterns = [
     path('ws/update_user_image/<int:user_id>', views.update_user_image),
     path('ws/update_user/<int:user_id>', views.update_user),
     path('ws/update_profile/<int:user_id>', views.update_profile),
+    path('ws/update_cart', views.update_cart),
+    path('ws/current_user', views.current_user),
+    path('ws/favorites', views.get_favorites),
+    path('ws/favorite_products', views.get_favorite_products),
+    path('ws/add_favorite', views.add_favorite),
+    path('ws/remove_favorite/<int:favorite_id>', views.remove_favorite)
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

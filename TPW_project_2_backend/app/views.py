@@ -27,6 +27,7 @@ from app.serializers import UserSerializer, ProductSerializer, CommentSerializer
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
 
+
 # Create your views here.
 
 
@@ -654,7 +655,7 @@ def process_payment(request):
 
 @login_required(login_url='/login')
 def favorites(request):
-    # Get the user
+    # Get the user yes
     user = request.user
 
     # Get the user ID
@@ -677,11 +678,14 @@ def favorites(request):
 def get_products(request):
     try:
         products = Product.objects.all()
+        # print("Products found: ", products)
         # the image is a file, we need to send it as a base64 string
         image_base64 = []
         for product in products:
+            # print(product.image)
             image = product.image
             image_base64.append(base64.b64encode(image.read()))
+
         serializer = ProductSerializer(products, many=True)
         for i in range(len(serializer.data)):
             serializer.data[i]['image'] = image_base64[i]
@@ -693,9 +697,10 @@ def get_products(request):
 
 @api_view(['GET'])
 def get_followed_products(request):
-    user_id = int(request.GET['id'])
+    user_id = int(request.GET['id']) if request.GET['id'] != "null" else None
 
     try:
+
         user = User.objects.get(id=user_id)
         followers = Follower.objects.filter(follower=user)
         followers_id = [follower.followed.id for follower in followers]
@@ -752,6 +757,7 @@ def loginREST(request):
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+
 # Registering a user, REST API
 @api_view(['POST'])
 def registerREST(request):
@@ -770,6 +776,7 @@ def registerREST(request):
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+
 # Current user, REST API
 @api_view(['GET'])
 def current_user(request):
@@ -781,6 +788,7 @@ def current_user(request):
         serializer = UserSerializer(user)
         return Response(serializer.data)
     return Response(status=status.HTTP_404_NOT_FOUND)
+
 
 # No user image, REST API
 @api_view(['GET'])
@@ -858,15 +866,27 @@ def get_cart(request):
     except Cart.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Cart not found'}, status=404)
 
+
 # get the users from the database, REST API
 @api_view(['GET'])
 def get_users(request):
     try:
         users = User.objects.all()
+        # print("Users found: ", users)
+        image_base64 = []
+        for user in users:
+            # print(user.image)
+            # print("User Trying: ", user, " and is image: ", user.image)
+            image = user.image
+            image_base64.append(base64.b64encode(image.read()))
+            # print("user did it: ", user)
         serializer = UserSerializer(users, many=True)
+        for i in range(len(serializer.data)):
+            serializer.data[i]['image'] = image_base64[i]
         return Response(serializer.data)
     except User.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
 
 # get a user from the database, REST API
 @api_view(['GET'])
@@ -878,6 +898,7 @@ def get_user(request, user_id):
     except User.DoesNotExist:
         print("User does not exist")
         return Response(status=status.HTTP_404_NOT_FOUND)
+
 
 # get user from the database with username and password, REST API
 @api_view(['POST'])
@@ -893,6 +914,7 @@ def get_user_with_username_and_password(request):
     except User.DoesNotExist:
         print("User does not exist")
         return Response(status=status.HTTP_404_NOT_FOUND)
+
 
 # create a new user, REST API
 @api_view(['POST'])
@@ -913,6 +935,7 @@ def new_user(request):
         print("User does not exist")
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+
 @api_view(['DELETE'])
 def delete_user(request, user_id):
     try:
@@ -928,8 +951,6 @@ def delete_user(request, user_id):
 
     except User.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'User not found'}, status=404)
-
-
 
 
 @api_view(['DELETE'])
@@ -1017,3 +1038,103 @@ def update_profile(request, user_id):
     except User.DoesNotExist:
         print("User does not exist")
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['PUT'])
+def update_cart(request):
+    try:
+        username = request.data['username']
+        product_name = request.data['productName']
+
+
+
+        user = User.objects.get(username=username)
+
+        cart = Cart.objects.get(user=user)
+        cart_item = CartItem.objects.get(product__name=product_name, user=user)
+        cart.price -= cart_item.price
+
+        cart_item.delete()
+        cart.save()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+    except CartItem.DoesNotExist:
+        return redirect('pagina_de_erro')  # Substitua 'pagina_de_erro' pelo nome da URL da página de erro apropriada
+
+@api_view(['GET'])
+def current_user(request):
+    try:
+        name = request.GET['username']
+        user = User.objects.get(username=name)
+        serializer = UserSerializer(user)
+
+        return Response(serializer.data)
+
+    except User.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'User not found'}, status=404)
+
+@api_view(['GET'])
+def get_favorites(request):
+    try:
+        favorites = Favorite.objects.all()
+        serializer = FavoriteSerializer(favorites, many=True)
+
+        return Response(serializer.data)
+
+    except Favorite.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Favorites not found'}, status=404)
+
+@api_view(['GET'])
+def get_favorite_products(request):
+    try:
+        products = []
+        name = request.GET['username']
+        user = User.objects.get(username=name)
+        favorites = Favorite.objects.filter(user_id=user.id)
+        for favorite in favorites:
+            products.append(Product.objects.filter(id=favorite.product_id))
+        serializer = ProductSerializer(products, many=True)
+
+        return Response(serializer.data)
+
+    except Favorite.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Favorites not found'}, status=404)
+
+    except Product.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Product not found'}, status=404)
+
+    except User.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'User not found'}, status=404)
+
+
+@api_view(['POST'])
+def add_favorite(request):
+    data = request.data['favourite']
+
+    try:
+        favorite, created = Favorite.objects.get_or_create(user_id=data.user_id, product_id=data.product_id)
+
+        if not created:
+            pass
+
+        else:
+            favorite.user_id = request.user.id
+            favorite.product_id = data.product_id
+            favorite.save()
+        return Response(status=status.HTTP_201_CREATED)
+
+    except Favorite.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['DELETE'])
+def remove_favorite(request, favourite_id):
+    try:
+        favorite = get_object_or_404(Favorite, id=favourite_id)
+        favorite.delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    except Favorite.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Product not found'}, status=404)

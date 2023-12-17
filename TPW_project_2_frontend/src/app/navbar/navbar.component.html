@@ -31,14 +31,11 @@
       <ul class="navbar-nav d-flex flex-row me-3">
 
         <ul class="navbar-nav d-flex flex-row ms-auto me-3">
-          <!--            {% if user.admin %}-->
-          <!--            <li class="nav-item">-->
-          <!--              <a class="nav-link" routerLink="/adminpage">Admin</a>-->
-          <!--            </li>-->
-          <!--            {% endif %}-->
 
+          <li class="nav-item" *ngIf="user.admin">
+            <a class="nav-link" href="/admin">Admin</a>
+          </li>
 
-          <!--            {% if user %}-->
           <ng-container *ngIf="user.id != 0">
             <li class="nav-item me-3 me-lg-0 dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-mdb-toggle="dropdown"
@@ -50,8 +47,6 @@
               <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown1">
 
                 <li><a class="dropdown-item" routerLink="/account/profile">My Account</a></li>
-
-
                 <li><a class="dropdown-item" routerLink="/account/favorites">Favorites</a></li>
                 <li><a class="dropdown-item" routerLink="/account/settings">Settings</a></li>
                 <li>

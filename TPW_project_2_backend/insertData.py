@@ -39,6 +39,7 @@ user3 = User.objects.create(
     email='manel@example.com',
     password='user1234',  # Você deve usar um método seguro para armazenar senhas reais
     admin=True,  # Este usuário não é um administrador
+    image='user_no_picture.png'
 )
 authenticate(username='jose', password='user1234')
 
