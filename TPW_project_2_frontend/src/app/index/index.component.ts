@@ -4,6 +4,8 @@ import {ProductService} from "../product.service";
 import {CommonModule} from "@angular/common";
 import {ProductsComponent} from "../products/products.component";
 
+
+
 @Component({
   selector: 'app-index',
   standalone: true,
@@ -18,6 +20,8 @@ export class IndexComponent {
 
 
 
+
+
 constructor() {
     this.productService.getProducts().then((products: Product[]) => {
       this.explore = products;
@@ -29,13 +33,10 @@ constructor() {
     this.productService.getFollowedProducts().then((products: Product[]) => {
      this.followings = products;
     });
-  // this.productService.getExploreProducts().then((products: Product[]) => {
-  //   this.explore = products;
-  //   console.log(this.explore);
-  // }
 
 
 
 
   }
+
 }

@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core';
 import {Product} from "./product";
 import {base64toBlob} from "./utils";
+import { Router } from '@angular/router';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
   private baseUrl: string = "http://localhost:8000/ws/";
-  constructor() { }
+  constructor(private router: Router) { }
+
 
   async getProducts(): Promise<Product[]> {
     const url: string = this.baseUrl + "products";
@@ -24,7 +27,9 @@ export class ProductService {
   }
 
   async getFollowedProducts(): Promise<Product[]> {
-    const url: string = this.baseUrl + "followed_products?id=1"; // TODO: get the user
+
+    let id = localStorage.getItem("id");
+    const url: string = this.baseUrl + "followed_products?id=" + id;
     const data: Response = await fetch(url);
 
     const products: Product[] = await data.json() ?? [];
@@ -35,24 +40,25 @@ export class ProductService {
     return products;
   }
 
-  async getExploreProducts(): Promise<Product[]> {
-    const url: string = this.baseUrl + "explore_products";
-    const data: Response = await fetch(url);
-    return await data.json() ?? [];
-  }
-
   async addProductToCart(productID: number): Promise<Response> {
+
+    if(localStorage.getItem("username") == null){
+      await this.router.navigate(['/login']);
+    }
+
+
     try {
       const url: string = this.baseUrl + "add_product_to_cart";
       const data: Response = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productID: productID, username: localStorage.getItem("username") }) // TODO: get the user
+        body: JSON.stringify({ productID: productID, username: localStorage.getItem("username") })
       });
 
       if (!data.ok) {
         throw new Error(data.statusText);
       }
+
 
       return data;
     } catch (error) {
