@@ -11,8 +11,10 @@ export class CartService {
 
   async getProducts(): Promise<any> {
 
+    let username = localStorage.getItem("username")
 
-    const url: string = this.baseUrl + "cart?username=jose"; // TODO: get the user
+
+    const url: string = this.baseUrl + "cart?username=" + username;
 
 
     try {

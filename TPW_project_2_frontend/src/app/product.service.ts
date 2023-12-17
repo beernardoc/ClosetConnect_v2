@@ -47,7 +47,7 @@ export class ProductService {
       const data: Response = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productID: productID, username: "jose" }) // TODO: get the user
+        body: JSON.stringify({ productID: productID, username: localStorage.getItem("username") }) // TODO: get the user
       });
 
       if (!data.ok) {
