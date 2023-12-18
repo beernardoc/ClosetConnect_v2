@@ -180,6 +180,9 @@ export class AccountSettingsComponent {
         if (success) {
           // redirect to home page
           window.location.href = "/";
+          // remove user from local storage to log user out
+          localStorage.removeItem('username');
+          localStorage.removeItem('id');
         } else {
           // Display error message, user does not exist
           console.log("Error deleting user");

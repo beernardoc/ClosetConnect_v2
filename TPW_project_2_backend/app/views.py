@@ -1191,3 +1191,46 @@ def delete_user(request, user_id):
         return Response(status=status.HTTP_204_NO_CONTENT)
     except User.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'User not found'}, status=404)
+
+# get the user's products, REST API
+@api_view(['GET'])
+def get_user_products(request, user_id):
+    try:
+        products = Product.objects.filter(user_id=user_id)
+        # the image is a file, we need to send it as a base64 string
+        image_base64 = []
+        for product in products:
+            image = product.image
+            image_base64.append(base64.b64encode(image.read()))
+
+        serializer = ProductSerializer(products, many=True)
+        for i in range(len(serializer.data)):
+            serializer.data[i]['image'] = image_base64[i]
+
+        return Response(serializer.data)
+    except Product.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+# get the user's followers, REST API
+@api_view(['GET'])
+def get_user_followers(request, user_id):
+    try:
+        followers = Follower.objects.filter(followed=user_id)
+        serializer = FollowerSerializer(followers, many=True)
+
+        return Response(serializer.data)
+
+    except Follower.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Followers not found'}, status=404)
+
+# get who the user is following, REST API
+@api_view(['GET'])
+def get_user_following(request, user_id):
+    try:
+        following = Follower.objects.filter(follower=user_id)
+        serializer = FollowerSerializer(following, many=True)
+
+        return Response(serializer.data)
+
+    except Follower.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Following not found'}, status=404)

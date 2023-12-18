@@ -69,5 +69,8 @@ urlpatterns = [
     path('ws/add_favorite', views.add_favorite),
     path('ws/remove_favorite/<int:favorite_id>', views.remove_favorite),
     path('ws/delete_user/<int:user_id>', views.delete_user),
+    path('ws/user/products/<int:user_id>', views.get_user_products),
+    path('ws/user/followers/<int:user_id>', views.get_user_followers),
+    path('ws/user/following/<int:user_id>', views.get_user_following),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
