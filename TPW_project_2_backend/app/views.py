@@ -694,6 +694,17 @@ def get_products(request):
     except Product.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+@api_view(['GET'])
+def get_product(request):
+    product = request.product
+    try:
+        product2 = Product.objects.get(id=product.id)
+        serializer = ProductSerializer(product2)
+        return Response(serializer.data)
+    except Product.DoesNotExist:
+        print("Product does not exist")
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
 
 @api_view(['GET'])
 def get_followed_products(request):
@@ -1113,27 +1124,35 @@ def get_favorite_products(request):
 
 @api_view(['POST'])
 def add_favorite(request):
-    data = request.data['favourite']
+    product_id = request.data['product_id']
+    username = request.data['username']
 
     try:
-        favorite, created = Favorite.objects.get_or_create(user_id=data.user_id, product_id=data.product_id)
+        product = get_object_or_404(Product, id=product_id)
+        user = User.objects.get(username=username)
+
+        favorite, created = Favorite.objects.get_or_create(user_id=user.id, product_id=product.id)
+
 
         if not created:
             pass
 
         else:
-            favorite.user_id = request.user.id
-            favorite.product_id = data.product_id
             favorite.save()
-        return Response(status=status.HTTP_201_CREATED)
 
-    except Favorite.DoesNotExist:
+
+        return Response(status=status.HTTP_201_CREATED)
+    except Product.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    except User.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['DELETE'])
-def remove_favorite(request, favourite_id):
+def remove_favorite(request, product_id):
     try:
-        favorite = get_object_or_404(Favorite, id=favourite_id)
+        user = request.user
+        favorite = get_object_or_404(Favorite, product_id=product_id, user_id=user.id)
         favorite.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -1247,3 +1266,14 @@ def sell_product(request, product_id):
         return Response(status=status.HTTP_204_NO_CONTENT)
     except Product.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Product not found'}, status=404)
+
+@api_view(['GET'])
+def seller(request):
+    product = request.product
+    try:
+        user = User.objects.get(id=product.user_id)
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+    except User.DoesNotExist:
+        print("Seller does not exist")
+        return Response(status=status.HTTP_404_NOT_FOUND)

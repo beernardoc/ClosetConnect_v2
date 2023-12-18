@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {Product} from "./product";
 import {base64toBlob} from "./utils";
 import { Router } from '@angular/router';
+import {User} from "./user";
 
 
 @Injectable({
@@ -10,6 +11,15 @@ import { Router } from '@angular/router';
 export class ProductService {
   private baseUrl: string = "http://localhost:8000/ws/";
   constructor(private router: Router) { }
+
+  async getProduct(): Promise<Product> {
+    const url: string = this.baseUrl + "product/";
+    const data: Response = await fetch(url);
+    const product: Product = await data.json() ?? {};
+    const blob: Blob = base64toBlob(product.image, "image/jpg");
+    product.image = URL.createObjectURL(blob);
+    return product;
+  }
 
 
   async getProducts(): Promise<Product[]> {
@@ -115,6 +125,17 @@ export class ProductService {
       console.error("Error selling product:", error);
       throw error;
     }
+  }
+
+  async getSeller()   {
+    const url: string = this.baseUrl + "seller";
+    const data: Response = await fetch(url);
+    const seller: User = await data.json() ?? null;
+    if (seller) {
+      const blob: Blob = base64toBlob(seller.image, "image/jpg");
+      seller.image = URL.createObjectURL(blob);
+    }
+    return seller;
   }
 
 }

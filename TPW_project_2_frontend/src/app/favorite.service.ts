@@ -22,13 +22,13 @@ export class FavoriteService {
     return await data.json() ?? [];
   }
 
-  async addFavorite(favorite: Favorite): Promise<Response> {
+  async addFavorite(product_id : number): Promise<Response> {
     try {
       const url: string = this.baseUrl + "add_favorite";
       const data: Response = await fetch(url, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(favorite)
+        body: JSON.stringify({product_id: product_id, username: localStorage.getItem("username")})
       });
 
       if (!data.ok) {

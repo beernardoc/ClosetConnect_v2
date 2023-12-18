@@ -3,7 +3,6 @@ import {Product} from "../product";
 import {User} from "../user";
 import {Favorite} from "../favorite";
 import {UserService} from "../user.service";
-import {ProductService} from "../product.service";
 import {FavoriteService} from "../favorite.service";
 import {CommonModule} from "@angular/common";
 import {ProductsComponent} from "../products/products.component";

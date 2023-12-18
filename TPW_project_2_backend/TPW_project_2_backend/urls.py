@@ -45,6 +45,7 @@ urlpatterns = [
 
     # REST API
     path('ws/products', views.get_products),
+    path('ws/product/', views.get_product),
     path('ws/followed_products', views.get_followed_products),
     path('ws/explore_products', views.get_explore_products),
     path('ws/register', views.registerREST),
@@ -67,11 +68,14 @@ urlpatterns = [
     path('ws/favorites', views.get_favorites),
     path('ws/favorite_products', views.get_favorite_products),
     path('ws/add_favorite', views.add_favorite),
-    path('ws/remove_favorite/<int:favorite_id>', views.remove_favorite),
+    path('ws/remove_favorite/<int:product_id>', views.remove_favorite),
     path('ws/delete_user/<int:user_id>', views.delete_user),
     path('ws/user/products/<int:user_id>', views.get_user_products),
     path('ws/user/followers/<int:user_id>', views.get_user_followers),
     path('ws/user/following/<int:user_id>', views.get_user_following),
     path('ws/user/sell/<int:product_id>', views.sell_product),
+    #TODO
+    path('ws/seller', views.seller),
+
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
