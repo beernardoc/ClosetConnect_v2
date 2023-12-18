@@ -83,12 +83,45 @@
                 <h5 class="modal-title" id="staticBackdropLabel">Changing the password</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
-              <form action="." method="post">
+              <form [formGroup]="updatePasswordForm" (ngSubmit)="onSubmitPassword()">
                 <div class="modal-body">
                   <div class="form-row">
-<!--                    {{ password_form.as_div }}-->
+                    <label for="inputOldPassword">Old Password</label>
+                    <input type="password" class="form-control" id="inputOldPassword" name="oldPassword" placeholder="Old Password" formControlName="oldPassword">
+                    <!-- Error message -->
+                    <div *ngIf="updatePasswordForm.get('oldPassword')?.errors?.['required'] && updatePasswordForm.get('oldPassword')?.touched" class="alert alert-danger"
+                          style="margin-top: 5px; padding-top: 5px; padding-bottom: 5px">
+                      Please enter your old password.
+                    </div>
+
+                    <label for="inputNewPassword">New Password</label>
+                    <input type="password" class="form-control" id="inputNewPassword" name="newPassword" placeholder="New Password" formControlName="newPassword">
+                    <!-- Error message -->
+                    <div *ngIf="updatePasswordForm.get('newPassword')?.errors?.['required'] && updatePasswordForm.get('newPassword')?.touched" class="alert alert-danger"
+                          style="margin-top: 5px; padding-top: 5px; padding-bottom: 5px">
+                      Please enter your new password.
+                    </div>
+
+                    <label for="inputConfirmPassword">Confirm Password</label>
+                    <input type="password" class="form-control" id="inputConfirmPassword" name="confirmPassword" placeholder="Confirm Password" formControlName="confirmPassword">
+                    <!-- Error message -->
+                    <div *ngIf="updatePasswordForm.get('confirmPassword')?.errors?.['required'] && updatePasswordForm.get('confirmPassword')?.touched" class="alert alert-danger"
+                          style="margin-top: 5px; padding-top: 5px; padding-bottom: 5px">
+                      Please confirm your new password.
+                    </div>
                   </div>
                 </div>
+
+                <!-- Password not match error message -->
+                <div *ngIf="oldPasswordIncorrect" class="alert alert-danger"
+                      style="margin-top: 5px; padding-top: 5px; padding-bottom: 5px">
+                  Old password is incorrect.
+                </div>
+                <div *ngIf="passwordMismatch" class="alert alert-danger"
+                      style="margin-top: 5px; padding-top: 5px; padding-bottom: 5px">
+                  Passwords do not match.
+                </div>
+
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                   <input type="submit" class="btn btn-success" name="password_change" value="Confirm Changes"/>

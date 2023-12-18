@@ -1025,12 +1025,14 @@ def update_profile(request, user_id):
         username = data['username']
         email = data['email']
         description = data['description']
+        password = data['password']
 
         user = User.objects.get(id=user_id)
         user.name = name
         user.username = username
         user.email = email
         user.description = description
+        user.password = password
         user.save()
 
         serializer = UserSerializer(user)

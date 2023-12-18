@@ -32,6 +32,10 @@ export class AccountSettingsComponent {
 
   updatePicForm!: FormGroup;
   updateProfileForm!: FormGroup;
+  updatePasswordForm!: FormGroup;
+  passwordMismatch: boolean = false;
+  oldPasswordIncorrect: boolean = false;
+
   selectedFile!: File;
 
   constructor(private formBuilder: FormBuilder) {
@@ -58,6 +62,12 @@ export class AccountSettingsComponent {
       name: [this.user.name, [Validators.required]],
       email: [this.user.email, [Validators.required, Validators.email]],
       description: [this.user.description]
+    });
+
+    this.updatePasswordForm = this.formBuilder.group({
+      oldPassword: ['', [Validators.required]],
+      newPassword: ['', [Validators.required]],
+      confirmPassword: ['', [Validators.required]]
     });
   }
 
@@ -124,6 +134,45 @@ export class AccountSettingsComponent {
     }
   }
 
+  onSubmitPassword(): void {
+    // clear error messages
+    this.passwordMismatch = false;
+    this.oldPasswordIncorrect = false;
+
+
+    if (this.updatePasswordForm.valid) {
+      if (this.updatePasswordForm.value.oldPassword !== this.user.password) {
+        this.oldPasswordIncorrect = true;
+        return;
+      }
+      else if (this.updatePasswordForm.value.newPassword !== this.updatePasswordForm.value.confirmPassword) {
+        this.passwordMismatch = true;
+        return;
+      }
+      else {
+        this.user.password = this.updatePasswordForm.value.newPassword;
+        this.currentUserService.updateProfile(this.user)
+          .then((success: boolean) => {
+            if (success) {
+              // reload page
+              window.location.reload();
+            } else {
+              // Display error message, user does not exist
+              console.log("Error updating user");
+            }
+          })
+          .catch((error) => {
+            console.error('Error updating user:', error);
+          });
+      }
+    }
+    else {
+      // Check if any of the fields are dirty (touched or modified)
+      this.updatePasswordForm.markAllAsTouched();
+      console.log('Invalid form submitted');
+      console.log(this.updatePasswordForm);
+    }
+  }
 
 
   onFileSelected(event: any) {

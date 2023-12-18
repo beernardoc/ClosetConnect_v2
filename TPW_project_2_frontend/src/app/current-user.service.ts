@@ -78,7 +78,8 @@ export class CurrentUserService {
           username: user.username,
           name: user.name,
           email: user.email,
-          description: user.description
+          description: user.description,
+          password: user.password
         }
       ),
       headers: {
