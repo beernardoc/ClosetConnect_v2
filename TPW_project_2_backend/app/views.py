@@ -1268,3 +1268,39 @@ def get_product_favorites(request, product_id):
 
     except Favorite.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Favorites not found'}, status=404)
+
+# update a product, REST API
+@api_view(['PUT'])
+def update_product(request, product_id):
+    try:
+        data = json.loads(request.body)
+        name = data['name']
+        description = data['description']
+        price = data['price']
+        category = data['category']
+        brand = data['brand']
+        color = data['color']
+        image = data['image']
+        if image != "":
+            image = data['image']
+            # image is a base64 string
+            image += '=' * (-len(image) % 4)
+            image = base64.b64decode(image)
+            # make it a file
+            image = ContentFile(image, f'{name}.png')
+
+        product = Product.objects.get(id=product_id)
+        product.name = name
+        product.description = description
+        product.price = price
+        product.category = category
+        product.brand = brand
+        product.color = color
+        if image != "":
+            product.image = image
+        product.save()
+        serializer = ProductSerializer(product)
+        return Response(serializer.data)
+    except Product.DoesNotExist:
+        print("Product does not exist")
+        return Response(status=status.HTTP_404_NOT_FOUND)
