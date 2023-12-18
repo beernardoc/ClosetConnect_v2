@@ -9,6 +9,7 @@ import {AuthGuard} from "./app.guard";
 import {FavoritesComponent} from "./favorites/favorites.component";
 import {AccountProfileComponent} from "./account-profile/account-profile.component";
 import {AccountProductComponent} from "./account-product/account-product.component";
+import {AccountEditProductComponent} from "./account-edit-product/account-edit-product.component";
 
 export const routes: Routes = [
   { path: '', component: IndexComponent },
@@ -22,4 +23,5 @@ export const routes: Routes = [
   { path: 'favorites', component: FavoritesComponent },
   { path: 'account/profile', component: AccountProfileComponent },
   { path: 'account/product/:id', component: AccountProductComponent },
+  { path: 'account/product/edit/:id', component: AccountEditProductComponent },
 ];

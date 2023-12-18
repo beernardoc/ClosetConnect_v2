@@ -1,0 +1,96 @@
+<div class="container mt-3">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-10 col-xl-8 mx-auto">
+      <h2 class="h3 mb-4 page-title text-muted" style="margin-top: 10px">Editing product...</h2>
+      <div class="my-4">
+
+        <hr class="my-4" />
+        <form [formGroup]="updateProductForm" (ngSubmit)="onSubmit()">
+          <div class="form-group">
+            <!-- Name -->
+            <label for="name">Product name:</label>
+            <input type="text" name="name" id="name" class="form-control" value="{{ product?.name }}" formControlName="name">
+            <!-- Required error message -->
+            <div *ngIf="updateProductForm.get('name')?.invalid && updateProductForm.get('name')?.touched" class="alert alert-danger">
+              <div *ngIf="updateProductForm.get('name')?.errors?.['required']">
+                Product name is required.
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <!-- Description -->
+            <label for="description">Description:</label>
+            <textarea name="description" id="description" class="form-control" formControlName="description" style="height: 100px; resize: none">{{ product?.description }}</textarea>
+            <!-- Required error message -->
+            <div *ngIf="updateProductForm.get('description')?.invalid && updateProductForm.get('description')?.touched" class="alert alert-danger">
+              <div *ngIf="updateProductForm.get('description')?.errors?.['required']">
+                Description is required.
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <!-- Image -->
+            <label for="image">Image:</label>
+            <input type="file" name="image" id="image" class="form-control" formControlName="image" accept="image/*" (change)="onFileSelected($event)">
+            <!-- Required error message -->
+            <div *ngIf="updateProductForm.get('image')?.invalid && updateProductForm.get('image')?.touched" class="alert alert-danger">
+              <div *ngIf="updateProductForm.get('image')?.errors?.['required']">
+                Image is required.
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <!-- Category -->
+            <label for="category">Category:</label>
+            <input type="text" name="category" id="category" class="form-control" value="{{ product?.category }}" formControlName="category">
+            <!-- Required error message -->
+            <div *ngIf="updateProductForm.get('category')?.invalid && updateProductForm.get('category')?.touched" class="alert alert-danger">
+              <div *ngIf="updateProductForm.get('category')?.errors?.['required']">
+                Category is required.
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <!-- Brand -->
+            <label for="brand">Brand:</label>
+            <input type="text" name="brand" id="brand" class="form-control" value="{{ product?.brand }}" formControlName="brand">
+            <!-- Required error message -->
+            <div *ngIf="updateProductForm.get('brand')?.invalid && updateProductForm.get('brand')?.touched" class="alert alert-danger">
+              <div *ngIf="updateProductForm.get('brand')?.errors?.['required']">
+                Brand is required.
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <!-- Color -->
+            <label for="color">Color:</label>
+            <input type="text" name="color" id="color" class="form-control" value="{{ product?.color }}" formControlName="color">
+            <!-- Required error message -->
+            <div *ngIf="updateProductForm.get('color')?.invalid && updateProductForm.get('color')?.touched" class="alert alert-danger">
+              <div *ngIf="updateProductForm.get('color')?.errors?.['required']">
+                Color is required.
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <!-- Price -->
+            <label for="price">Price:</label>
+            <input type="number" name="price" id="price" class="form-control" value="{{ product?.price }}" formControlName="price">
+            <!-- Required error message -->
+            <div *ngIf="updateProductForm.get('price')?.invalid && updateProductForm.get('price')?.touched" class="alert alert-danger">
+              <div *ngIf="updateProductForm.get('price')?.errors?.['required']">
+                Price is required.
+              </div>
+            </div>
+          </div>
+
+          <hr class="my-4" />
+          <div class="col-md-offset-2 col-md-10">
+            <button type="submit" class="btn btn-success">Confirm Edit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
