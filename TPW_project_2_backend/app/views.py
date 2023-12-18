@@ -1247,3 +1247,12 @@ def sell_product(request, product_id):
         return Response(status=status.HTTP_204_NO_CONTENT)
     except Product.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Product not found'}, status=404)
+
+@api_view(['GET'])
+def get_product(request, product_id):
+    try:
+        product = Product.objects.get(id=product_id)
+        serializer = ProductSerializer(product)
+        return Response(serializer.data)
+    except Product.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Product not found'}, status=404)

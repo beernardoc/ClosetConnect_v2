@@ -117,4 +117,13 @@ export class ProductService {
     }
   }
 
+  async getProduct(id: number): Promise<Product> {
+    const url: string = this.baseUrl + "product/" + id;
+    const data: Response = await fetch(url);
+    const product: Product = await data.json() ?? [];
+    const blob: Blob = base64toBlob(product.image, "image/jpg");
+    product.image = URL.createObjectURL(blob);
+    return product;
+  }
+
 }

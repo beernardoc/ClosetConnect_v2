@@ -73,5 +73,6 @@ urlpatterns = [
     path('ws/user/followers/<int:user_id>', views.get_user_followers),
     path('ws/user/following/<int:user_id>', views.get_user_following),
     path('ws/user/sell/<int:product_id>', views.sell_product),
+    path('ws/product/<int:product_id>', views.get_product)
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
