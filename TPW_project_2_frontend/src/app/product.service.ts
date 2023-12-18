@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Product} from "./product";
 import {base64toBlob} from "./utils";
-import { Router } from '@angular/router';
+import {Router} from '@angular/router';
 
 
 @Injectable({
@@ -124,6 +124,12 @@ export class ProductService {
     const blob: Blob = base64toBlob(product.image_base64, "image/jpg");
     product.image_base64 = URL.createObjectURL(blob);
     return product;
+  }
+
+  async getNumProductFavorites(id: number): Promise<number> {
+    const url: string = this.baseUrl + "product/favorites/" + id;
+    const data: Response = await fetch(url);
+    return await data.json() ?? [];
   }
 
 }

@@ -13,6 +13,7 @@ import {ProductService} from "../product.service";
 })
 export class AccountProductComponent {
   @Input() product: Product | undefined = undefined;
+  favorites: number = 0;
   productService: ProductService = inject(ProductService);
 
   constructor(private router: ActivatedRoute, private location: Location) {
@@ -23,7 +24,14 @@ export class AccountProductComponent {
       this.productService.getProduct(parseInt(productID))
         .then((product: Product) => {
           this.product = product;
-          console.log(this.product);
+
+          this.productService.getNumProductFavorites(this.product.id)
+            .then((favorites: number) => {
+              this.favorites = favorites;
+            })
+            .catch((error) => {
+              console.error('Error fetching favorites:', error);
+            });
         })
         .catch((error) => {
           console.error('Error fetching product:', error);

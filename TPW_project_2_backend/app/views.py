@@ -1256,3 +1256,15 @@ def get_product(request, product_id):
         return Response(serializer.data)
     except Product.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Product not found'}, status=404)
+
+# get the number of favorites of a product, REST API
+@api_view(['GET'])
+def get_product_favorites(request, product_id):
+    try:
+        product = Product.objects.get(id=product_id)
+        favorites = Favorite.objects.filter(product_id=product)
+        # return the number of favorites
+        return Response(favorites.count())
+
+    except Favorite.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Favorites not found'}, status=404)
