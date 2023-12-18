@@ -88,4 +88,15 @@ export class CurrentUserService {
     });
     return await data.json() ?? false;
   }
+
+  async deleteProfile(user: User): Promise<boolean> {
+    const url: string = this.baseUrl + "delete_user/" + user.id;
+    const data: Response = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    return await data.json() ?? false;
+  }
 }

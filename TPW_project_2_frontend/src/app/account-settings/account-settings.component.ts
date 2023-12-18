@@ -174,6 +174,22 @@ export class AccountSettingsComponent {
     }
   }
 
+  deleteAccount(): void {
+    this.currentUserService.deleteProfile(this.user)
+      .then((success: boolean) => {
+        if (success) {
+          // redirect to home page
+          window.location.href = "/";
+        } else {
+          // Display error message, user does not exist
+          console.log("Error deleting user");
+        }
+      })
+      .catch((error) => {
+        console.error('Error deleting user:', error);
+      });
+  }
+
 
   onFileSelected(event: any) {
     this.selectedFile = event.target.files[0];

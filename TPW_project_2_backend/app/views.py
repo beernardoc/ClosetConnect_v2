@@ -1140,3 +1140,54 @@ def remove_favorite(request, favourite_id):
 
     except Favorite.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Product not found'}, status=404)
+
+@api_view(['DELETE'])
+def delete_user(request, user_id):
+    try:
+        user = get_object_or_404(User, id=user_id)
+        # get all the products from user
+        user_products = Product.objects.filter(user_id=user.id)
+        for product in user_products:
+            product.delete()
+
+        # get all the favorites from user
+        user_favorites = Favorite.objects.filter(user_id=user.id)
+        for favorite in user_favorites:
+            favorite.delete()
+
+
+        # get all the comments from user
+        user_comments = Comment.objects.filter(user_id=user.id)
+        for comment in user_comments:
+            comment.delete()
+
+        # get all the comments for user
+        seller_comments = Comment.objects.filter(seller_id=user.id)
+        for comment in seller_comments:
+            comment.delete()
+
+        # get all the followers from user
+        user_followers = Follower.objects.filter(follower=user.id)
+        for follower in user_followers:
+            follower.delete()
+
+        # get all the followers for user
+        seller_followers = Follower.objects.filter(followed=user.id)
+        for follower in seller_followers:
+            follower.delete()
+
+        # get all the cart items from user
+        user_cart_items = CartItem.objects.filter(user_id=user.id)
+        for cart_item in user_cart_items:
+            cart_item.delete()
+
+        # get all the carts from user
+        user_carts = Cart.objects.filter(user_id=user.id)
+        for cart in user_carts:
+            cart.delete()
+
+        user.delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    except User.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'User not found'}, status=404)
