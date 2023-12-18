@@ -1,16 +1,17 @@
-import {Component, inject} from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import {Product} from "../product";
 import {User} from "../user";
 import {Favorite} from "../favorite";
 import {UserService} from "../user.service";
 import {ProductService} from "../product.service";
 import {FavoriteService} from "../favorite.service";
-import {CommonModule} from "@angular/common";
+import {CommonModule, Location} from "@angular/common";
 import {ProductsComponent} from "../products/products.component";
 import {UsersComponent} from "../users/users.component";
 import {FormsModule} from "@angular/forms";
 import {RouterLink} from "@angular/router";
 import {FollowerService} from "../follower.service";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-product-details',
@@ -20,25 +21,30 @@ import {FollowerService} from "../follower.service";
   styleUrl: './product-details.component.css'
 })
 export class ProductDetailsComponent {
-  product: Product = {} as Product;
+  product : Product = {} as Product;
   user : User = {} as User;
   seller : User = {} as User;
   favorite : boolean = false;
-  followers : number;
-  isfollowing : boolean;
+  followers : number = 0;
   userService: UserService = inject(UserService);
   productService: ProductService = inject(ProductService);
   favoriteService: FavoriteService = inject(FavoriteService);
   followerService: FollowerService = inject(FollowerService);
 
-  constructor() {
-    this.productService.getProduct().then((product: Product) => {
-      this.product = product;
-    });
+  constructor(private router: ActivatedRoute, private location: Location) {
+    let productID  = this.router.snapshot.paramMap.get('product_id');
 
-    this.userService.getCurrentUser().then((user: User) => {
-      this.user = user;
-    });
+    if (typeof productID === "string") {
+      this.productService.getProduct(parseInt(productID))
+        .then((product: Product) => {
+          this.product = product;
+        })
+    }
+
+      this.userService.getCurrentUser().then((user: User) => {
+        this.user = user;
+      });
+
   }
 
   addFavorite(product_id : number) {
@@ -61,7 +67,7 @@ export class ProductDetailsComponent {
 
   getFavorite() {
     this.favoriteService.getFavoriteProducts().then((products: Product[]) => {
-      if (products.find(p => p.id == this.product.id)) {
+      if (products.find(p => !(this.product) || p.id == this.product.id)) {
         this.favorite = true;
       }
     });

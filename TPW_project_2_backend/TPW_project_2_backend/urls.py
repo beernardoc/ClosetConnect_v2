@@ -45,7 +45,6 @@ urlpatterns = [
 
     # REST API
     path('ws/products', views.get_products),
-    path('ws/product/', views.get_product),
     path('ws/followed_products', views.get_followed_products),
     path('ws/explore_products', views.get_explore_products),
     path('ws/register', views.registerREST),
@@ -64,7 +63,6 @@ urlpatterns = [
     path('ws/update_user/<int:user_id>', views.update_user),
     path('ws/update_profile/<int:user_id>', views.update_profile),
     path('ws/update_cart', views.update_cart),
-    path('ws/current_user', views.current_user),
     path('ws/favorites', views.get_favorites),
     path('ws/favorite_products', views.get_favorite_products),
     path('ws/add_favorite', views.add_favorite),

@@ -12,14 +12,6 @@ export class ProductService {
   private baseUrl: string = "http://localhost:8000/ws/";
   constructor(private router: Router) { }
 
-  async getProduct(): Promise<Product> {
-    const url: string = this.baseUrl + "product/";
-    const data: Response = await fetch(url);
-    const product: Product = await data.json() ?? {};
-    const blob: Blob = base64toBlob(product.image, "image/jpg");
-    product.image = URL.createObjectURL(blob);
-    return product;
-  }
 
 
   async getProducts(): Promise<Product[]> {
