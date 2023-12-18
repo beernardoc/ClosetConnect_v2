@@ -826,11 +826,6 @@ def post_item_cart(request):
             cart_item.save()
             cart.save()
 
-        print(cart.items.all())
-        print(cart.price)
-        print(cart.items.count())
-        print(cart_item)
-
         return Response(status=status.HTTP_201_CREATED)
     except Product.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
@@ -847,7 +842,18 @@ def get_cart(request):
 
         items = {}
         for item in cart.items.all():
-            items[item.product.name] = item.price
+
+            product_name = item.product.name
+            product_image = base64.b64encode((item.product.image).read())
+            item_price = item.price
+            user_id = item.product.user_id.username
+
+            # Se a chave ainda não existir no dicionário, crie uma lista vazia como valor
+            if product_name not in items:
+                items[product_name] = []
+
+            # Adicione o preço e o user_id à lista associada à chave
+            items[product_name].append({'price': item_price, 'user_id': user_id, 'product_image': product_image})
 
         response_data = {
             'status': 'success',
@@ -964,6 +970,7 @@ def delete_product(request, product_id):
     except Product.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Product not found'}, status=404)
 
+
 # update a user's image, REST API
 @api_view(['POST'])
 def update_user_image(request, user_id):
@@ -981,6 +988,7 @@ def update_user_image(request, user_id):
     except User.DoesNotExist:
         print("User does not exist")
         return Response(status=status.HTTP_404_NOT_FOUND)
+
 
 # update a user, REST API
 @api_view(['POST'])
@@ -1016,6 +1024,7 @@ def update_user(request, user_id):
         print("User does not exist")
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+
 # update the user's profile, REST API
 @api_view(['PUT'])
 def update_profile(request, user_id):
@@ -1041,13 +1050,12 @@ def update_profile(request, user_id):
         print("User does not exist")
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+
 @api_view(['PUT'])
 def update_cart(request):
     try:
         username = request.data['username']
         product_name = request.data['productName']
-
-
 
         user = User.objects.get(username=username)
 
@@ -1065,6 +1073,7 @@ def update_cart(request):
     except CartItem.DoesNotExist:
         return redirect('pagina_de_erro')  # Substitua 'pagina_de_erro' pelo nome da URL da página de erro apropriada
 
+
 @api_view(['GET'])
 def current_user(request):
     try:
@@ -1077,6 +1086,7 @@ def current_user(request):
     except User.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'User not found'}, status=404)
 
+
 @api_view(['GET'])
 def get_favorites(request):
     try:
@@ -1087,6 +1097,7 @@ def get_favorites(request):
 
     except Favorite.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Favorites not found'}, status=404)
+
 
 @api_view(['GET'])
 def get_favorite_products(request):
@@ -1130,6 +1141,7 @@ def add_favorite(request):
     except Favorite.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+
 @api_view(['DELETE'])
 def remove_favorite(request, favourite_id):
     try:
@@ -1140,6 +1152,7 @@ def remove_favorite(request, favourite_id):
 
     except Favorite.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Product not found'}, status=404)
+
 
 @api_view(['DELETE'])
 def delete_user(request, user_id):
@@ -1154,7 +1167,6 @@ def delete_user(request, user_id):
         user_favorites = Favorite.objects.filter(user_id=user.id)
         for favorite in user_favorites:
             favorite.delete()
-
 
         # get all the comments from user
         user_comments = Comment.objects.filter(user_id=user.id)
@@ -1192,6 +1204,7 @@ def delete_user(request, user_id):
     except User.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'User not found'}, status=404)
 
+
 # get the user's products, REST API
 @api_view(['GET'])
 def get_user_products(request, user_id):
@@ -1211,6 +1224,7 @@ def get_user_products(request, user_id):
     except Product.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+
 # get the user's followers, REST API
 @api_view(['GET'])
 def get_user_followers(request, user_id):
@@ -1223,6 +1237,7 @@ def get_user_followers(request, user_id):
     except Follower.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Followers not found'}, status=404)
 
+
 # get who the user is following, REST API
 @api_view(['GET'])
 def get_user_following(request, user_id):
@@ -1234,6 +1249,7 @@ def get_user_following(request, user_id):
 
     except Follower.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Following not found'}, status=404)
+
 
 # sell a product, which means delete it and add 1 to the user's sold counter, REST API
 @api_view(['POST'])
@@ -1248,6 +1264,7 @@ def sell_product(request, product_id):
     except Product.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Product not found'}, status=404)
 
+
 @api_view(['GET'])
 def get_product(request, product_id):
     try:
@@ -1256,6 +1273,7 @@ def get_product(request, product_id):
         return Response(serializer.data)
     except Product.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Product not found'}, status=404)
+
 
 # get the number of favorites of a product, REST API
 @api_view(['GET'])
@@ -1268,3 +1286,22 @@ def get_product_favorites(request, product_id):
 
     except Favorite.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Favorites not found'}, status=404)
+
+
+@api_view(['POST'])
+def post_order(request):
+    username = request.data['username']
+
+    try:
+        user = User.objects.get(username=username)
+        cart, created = Cart.objects.get_or_create(user=user)
+        price = round(cart.price, 2)
+
+        cart.items.all().delete()
+        cart.price = 0
+        cart.save()
+
+        return Response(status=status.HTTP_201_CREATED)
+
+    except Cart.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)

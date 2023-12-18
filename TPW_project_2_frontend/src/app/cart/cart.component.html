@@ -24,7 +24,7 @@
           <ng-container *ngFor="let item of products ">
           <tr>
             <td>{{ item['key'] }}</td>
-            <td>{{ item['value'] }}€</td>
+            <td>{{ item['value'][0]['price'] }}€</td>
             <td>
                 <button type="button" class="btn btn-danger" (click)="cartService.deleteItemFromCart( item['key'])" >X</button>
             </td>
@@ -45,7 +45,7 @@
       <hr>
       <div class="row d-flex">
         <div class="col-md-12">
-          <a class="btn btn-success btn-lg">Finish </a>
+          <a href="cart/confirmOrder" class="btn btn-success btn-lg">Finish </a>
         </div>
       </div>
     </div>
