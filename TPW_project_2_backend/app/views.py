@@ -1215,10 +1215,10 @@ def get_user_products(request, user_id):
 @api_view(['GET'])
 def get_user_followers(request, user_id):
     try:
-        followers = Follower.objects.filter(followed=user_id)
-        serializer = FollowerSerializer(followers, many=True)
-
-        return Response(serializer.data)
+        user = User.objects.get(id=user_id)
+        followers = Follower.objects.filter(followed=user)
+        # return the number of followers
+        return Response(followers.count())
 
     except Follower.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Followers not found'}, status=404)
@@ -1227,10 +1227,10 @@ def get_user_followers(request, user_id):
 @api_view(['GET'])
 def get_user_following(request, user_id):
     try:
-        following = Follower.objects.filter(follower=user_id)
-        serializer = FollowerSerializer(following, many=True)
-
-        return Response(serializer.data)
+        user = User.objects.get(id=user_id)
+        following = Follower.objects.filter(follower=user)
+        # return the number of following
+        return Response(following.count())
 
     except Follower.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Following not found'}, status=404)

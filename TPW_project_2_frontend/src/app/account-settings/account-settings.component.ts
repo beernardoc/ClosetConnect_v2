@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {CurrentUserService} from "../current-user.service";
 import {User} from "../user";
 import {CommonModule} from "@angular/common";
@@ -28,7 +28,7 @@ export class AccountSettingsComponent {
   };
   at: string = "@";
 
-  currentUserService: CurrentUserService = new CurrentUserService();
+  currentUserService: CurrentUserService = inject(CurrentUserService)
 
   updatePicForm!: FormGroup;
   updateProfileForm!: FormGroup;
