@@ -132,4 +132,25 @@ export class ProductService {
     return await data.json() ?? [];
   }
 
+  async updateProduct(product: Product): Promise<boolean> {
+    const url: string = this.baseUrl + "update_product/" + product.id;
+    const data: Response = await fetch(url, {
+      method: 'PUT',
+      body: JSON.stringify(
+        {
+          name: product.name,
+          description: product.description,
+          image: product.image,
+          category: product.category,
+          brand: product.brand,
+          color: product.color,
+          price: product.price
+        }
+      ),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    return await data.json() ?? false;
+  }
 }

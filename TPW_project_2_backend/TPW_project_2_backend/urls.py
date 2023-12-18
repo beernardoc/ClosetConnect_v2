@@ -76,6 +76,7 @@ urlpatterns = [
     path('ws/product/<int:product_id>', views.get_product),
     path('ws/product/favorites/<int:product_id>', views.get_product_favorites),
     path('ws/process_payment', views.post_order),
+    path('ws/update_product/<int:product_id>', views.update_product),
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

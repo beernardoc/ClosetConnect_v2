@@ -10,6 +10,7 @@ import {FavoritesComponent} from "./favorites/favorites.component";
 import {AccountProfileComponent} from "./account-profile/account-profile.component";
 import {AccountProductComponent} from "./account-product/account-product.component";
 import {ConfirmOrderComponent} from "./confirm-order/confirm-order.component";
+import {AccountEditProductComponent} from "./account-edit-product/account-edit-product.component";
 
 export const routes: Routes = [
   { path: '', component: IndexComponent },
@@ -24,4 +25,5 @@ export const routes: Routes = [
   { path: 'account/profile', component: AccountProfileComponent },
   { path: 'account/product/:id', component: AccountProductComponent },
   {path: 'cart/confirmOrder', component: ConfirmOrderComponent},
+  { path: 'account/product/edit/:id', component: AccountEditProductComponent },
 ];
