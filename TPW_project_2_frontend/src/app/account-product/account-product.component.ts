@@ -1,7 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { Product } from "../product";
 import {ActivatedRoute} from "@angular/router";
+import {ProductService} from "../product.service";
 
 @Component({
   selector: 'app-account-product',
@@ -12,9 +13,21 @@ import {ActivatedRoute} from "@angular/router";
 })
 export class AccountProductComponent {
   @Input() product: Product | undefined = undefined;
+  productService: ProductService = inject(ProductService);
 
   constructor(private router: ActivatedRoute, private location: Location) {
-    let productID = this.router.snapshot.paramMap.get('id');
-    console.log(productID);
+    let productID  = this.router.snapshot.paramMap.get('id');
+
+
+    if (typeof productID === "string") {
+      this.productService.getProduct(parseInt(productID))
+        .then((product: Product) => {
+          this.product = product;
+          console.log(this.product);
+        })
+        .catch((error) => {
+          console.error('Error fetching product:', error);
+        });
+    }
   }
 }

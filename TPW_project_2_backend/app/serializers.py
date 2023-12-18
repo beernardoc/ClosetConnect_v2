@@ -18,9 +18,17 @@ class UserSerializer(serializers.ModelSerializer):
         return None  # Modify this based on your handling of null/empty images
 
 class ProductSerializer(serializers.ModelSerializer):
+    image_base64 = serializers.SerializerMethodField()
     class Meta:
         model = Product
-        fields = ('id', 'name', 'description', 'price', 'image', 'user_id', 'seen', 'brand', 'category', 'color')
+        fields = ('id', 'name', 'description', 'price', 'image', 'user_id', 'seen', 'brand', 'category', 'color', 'image_base64')
+
+    def get_image_base64(self, obj):
+        image = obj.image
+        if image:
+            with open(image.path, 'rb') as img_file:
+                return base64.b64encode(img_file.read()).decode('utf-8')
+        return None  # Modify this based on your handling of null/empty images
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
