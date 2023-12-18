@@ -1124,35 +1124,27 @@ def get_favorite_products(request):
 
 @api_view(['POST'])
 def add_favorite(request):
-    product_id = request.data['product_id']
-    username = request.data['username']
+    data = request.data['favourite']
 
     try:
-        product = get_object_or_404(Product, id=product_id)
-        user = User.objects.get(username=username)
-
-        favorite, created = Favorite.objects.get_or_create(user_id=user.id, product_id=product.id)
-
+        favorite, created = Favorite.objects.get_or_create(user_id=data.user_id, product_id=data.product_id)
 
         if not created:
             pass
 
         else:
+            favorite.user_id = request.user.id
+            favorite.product_id = data.product_id
             favorite.save()
-
-
         return Response(status=status.HTTP_201_CREATED)
-    except Product.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
 
-    except User.DoesNotExist:
+    except Favorite.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['DELETE'])
-def remove_favorite(request, product_id):
+def remove_favorite(request, favourite_id):
     try:
-        user = request.user
-        favorite = get_object_or_404(Favorite, product_id=product_id, user_id=user.id)
+        favorite = get_object_or_404(Favorite, id=favourite_id)
         favorite.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -1266,6 +1258,27 @@ def sell_product(request, product_id):
         return Response(status=status.HTTP_204_NO_CONTENT)
     except Product.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Product not found'}, status=404)
+
+@api_view(['GET'])
+def get_product(request, product_id):
+    try:
+        product = Product.objects.get(id=product_id)
+        serializer = ProductSerializer(product)
+        return Response(serializer.data)
+    except Product.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Product not found'}, status=404)
+
+# get the number of favorites of a product, REST API
+@api_view(['GET'])
+def get_product_favorites(request, product_id):
+    try:
+        product = Product.objects.get(id=product_id)
+        favorites = Favorite.objects.filter(product_id=product)
+        # return the number of favorites
+        return Response(favorites.count())
+
+    except Favorite.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Favorites not found'}, status=404)
 
 @api_view(['GET'])
 def seller(request):

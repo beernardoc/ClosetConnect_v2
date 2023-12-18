@@ -9,4 +9,5 @@ export interface Product {
   brand: string;
   category: string;
   color: string;
+  image_base64: string;
 }

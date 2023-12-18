@@ -74,7 +74,8 @@ urlpatterns = [
     path('ws/user/followers/<int:user_id>', views.get_user_followers),
     path('ws/user/following/<int:user_id>', views.get_user_following),
     path('ws/user/sell/<int:product_id>', views.sell_product),
-    #TODO
+    path('ws/product/<int:product_id>', views.get_product),
+    path('ws/product/favorites/<int:product_id>', views.get_product_favorites),
     path('ws/seller', views.seller),
 
 

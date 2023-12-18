@@ -127,6 +127,21 @@ export class ProductService {
     }
   }
 
+  async getProduct(id: number): Promise<Product> {
+    const url: string = this.baseUrl + "product/" + id;
+    const data: Response = await fetch(url);
+    const product: Product = await data.json() ?? [];
+    const blob: Blob = base64toBlob(product.image_base64, "image/jpg");
+    product.image_base64 = URL.createObjectURL(blob);
+    return product;
+  }
+
+  async getNumProductFavorites(id: number): Promise<number> {
+    const url: string = this.baseUrl + "product/favorites/" + id;
+    const data: Response = await fetch(url);
+    return await data.json() ?? [];
+  }
+
   async getSeller()   {
     const url: string = this.baseUrl + "seller";
     const data: Response = await fetch(url);
