@@ -70,10 +70,36 @@ export class AccountProfileComponent {
       });
   }
 
-  deleteModal(productId: number) {
-    let modal = document.getElementById("deleteModal_" + productId);
-    // @ts-ignore
-    modal.style.display = "block";
+  deleteProduct(productID: number): void {
+    this.productService.deleteProduct(productID)
+      .then(() => {
+        this.productService.getUserProducts(this.user.id)
+          .then((products: Product[]) => {
+            this.products = products;
+          })
+          .catch((error) => {
+            console.error('Error fetching products:', error);
+          });
+      })
+      .catch((error) => {
+        console.error('Error deleting product:', error);
+      });
+  }
+
+  soldProduct(productID: number): void {
+    this.productService.sellProduct(productID)
+      .then(() => {
+        this.productService.getUserProducts(this.user.id)
+          .then((products: Product[]) => {
+            this.products = products;
+          })
+          .catch((error) => {
+            console.error('Error fetching products:', error);
+          });
+      })
+      .catch((error) => {
+        console.error('Error selling product:', error);
+      });
   }
 
 }

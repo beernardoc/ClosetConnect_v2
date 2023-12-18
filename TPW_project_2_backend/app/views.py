@@ -1234,3 +1234,16 @@ def get_user_following(request, user_id):
 
     except Follower.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Following not found'}, status=404)
+
+# sell a product, which means delete it and add 1 to the user's sold counter, REST API
+@api_view(['POST'])
+def sell_product(request, product_id):
+    try:
+        product = Product.objects.get(id=product_id)
+        product.delete()
+        user = User.objects.get(id=product.user_id.id)
+        user.sold += 1
+        user.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    except Product.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Product not found'}, status=404)

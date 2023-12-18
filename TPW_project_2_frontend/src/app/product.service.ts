@@ -98,4 +98,23 @@ export class ProductService {
     return products;
   }
 
+  async sellProduct(id: number): Promise<Response> {
+    try {
+      const url: string = this.baseUrl + "user/sell/" + id;
+      const data: Response = await fetch(url, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+      });
+
+      if (!data.ok) {
+        throw new Error(data.statusText);
+      }
+
+      return data;
+    } catch (error) {
+      console.error("Error selling product:", error);
+      throw error;
+    }
+  }
+
 }
