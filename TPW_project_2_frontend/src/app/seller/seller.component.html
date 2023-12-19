@@ -11,8 +11,11 @@
 
 <!--      {% if user not in  followers %}<button type="submit" class="btn btn-primary" name="follow">{% bs_icon 'person-plus-fill' %} Follow</button>-->
 <!--      {% else %}<button type="submit" class="btn btn-secondary" name="unfollow">{% bs_icon 'person-dash-fill' %} Unfollow</button>{% endif %}-->
-      <div class="mb-2" style="margin-top: -30px">
-        <button type="submit" class="btn btn-primary" name="follow"><i class="bi bi-person-add"></i> Follow</button>
+      <div class="mb-2" style="margin-top: -30px" *ngIf="!isFollowing">
+        <button type="submit" class="btn btn-primary" name="follow" (click)="followUser()"><i class="bi bi-person-add"></i> Follow</button>
+      </div>
+      <div class="mb-2" style="margin-top: -30px" *ngIf="isFollowing">
+        <button type="submit" class="btn btn-secondary" name="unfollow" (click)="unfollowUser()"><i class="bi bi-person-dash"></i> UnFollow</button>
       </div>
 
       <p class="lead">Followers <b>{{ followers }}</b> | Following <b>{{ following }}</b></p>

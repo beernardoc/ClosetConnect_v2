@@ -90,7 +90,7 @@
             <div class="flex-item" style="margin-left: 10px">
               <form action="." method="post" style="padding-left: 1px;">
                 <input type="hidden" name="deleteProduct" value="{{ product.id }}">
-                <button type="submit" class="btn btn-danger" (click)="deleteProduct(product.id)">
+                <button type="submit" class="btn btn-danger" (click)="deleteProduct(product.id)" routerLink="">
                   <i class="bi bi-trash"></i>
                   Remove Product</button>
               </form>
@@ -181,7 +181,7 @@
         <div class="px-0 border rounded-2 shadow-0">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Other Products by <b> &#64; {{ seller.username }}</b></h5>
+              <h5 class="card-title">Other Products by <b>  &#64;{{ seller.username }}</b></h5>
               <ng-container *ngFor="let other_product of other_products">
               <div class="d-flex mb-3">
                 <a [routerLink]="'/product/' + other_product.id" class="me-3" (click)="reload()">

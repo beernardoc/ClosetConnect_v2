@@ -4,6 +4,7 @@ import {User} from "../user";
 import {Favorite} from "../favorite";
 import {UserService} from "../user.service";
 import {FavoriteService} from "../favorite.service";
+import {ProductService} from "../product.service";
 import {CommonModule} from "@angular/common";
 import {ProductsComponent} from "../products/products.component";
 import {UsersComponent} from "../users/users.component";
@@ -24,6 +25,7 @@ export class FavoritesComponent {
   user : User = {} as User;
   favoriteService: FavoriteService = inject(FavoriteService);
   currentUserService: CurrentUserService = inject(CurrentUserService);
+  productService: ProductService = inject(ProductService);
 
   constructor() {
     this.favoriteService.getFavorites().then((favourites: Favorite[]) => {

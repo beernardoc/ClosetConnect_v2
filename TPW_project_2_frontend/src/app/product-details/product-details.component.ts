@@ -76,6 +76,36 @@ export class ProductDetailsComponent {
                 }
               }
             });
+            this.userService.getUserComments(this.seller.id)
+              .then((comments: Comment[]) => {
+                this.comments = comments;
+                for (let comment of this.comments) {
+                  this.userService.getUser(comment.user_id)
+                    .then((user: User) => {
+                      comment.image = user.image_base64
+                      comment.name = user.name
+                      const me = localStorage.getItem('id')
+                      if (user.admin || (me && parseInt(me) === user.id)) {
+                        comment.alter = true
+                      }
+                      this.count = this.count + 1;
+                      console.log("Count: ", this.count)
+                      console.log("Comment Rating: ", comment.rating)
+                      this.rating = this.rating + comment.rating;
+                      console.log("Our Rating: ", this.rating)
+                      console.log(comment)
+                    })
+                    .catch((error) => {
+                      console.error('Error fetching user:', error);
+                    });
+                }
+                this.rating = this.rating / this.count;
+                console.log("Rating: ", this.rating)
+
+              })
+              .catch((error) => {
+                console.error('Error fetching comments:', error);
+              });
           });
         });
     }
@@ -93,33 +123,6 @@ export class ProductDetailsComponent {
         }
       });
     });
-
-    this.userService.getUserComments(this.seller.id)
-      .then((comments: Comment[]) => {
-        this.comments = comments;
-        for (let comment of this.comments) {
-          this.userService.getUser(comment.user_id)
-            .then((user: User) => {
-              comment.image = user.image_base64
-              comment.name = user.name
-              const me = localStorage.getItem('id')
-              if (user.admin || (me && parseInt(me) === user.id)) {
-                comment.alter = true
-              }
-              this.count = this.count + 1;
-              this.rating = this.rating + comment.rating;
-              console.log(comment)
-            })
-            .catch((error) => {
-              console.error('Error fetching user:', error);
-            });
-          this.rating = this.rating / this.count;
-        }
-
-      })
-      .catch((error) => {
-        console.error('Error fetching comments:', error);
-      });
   }
 
 
@@ -143,7 +146,7 @@ export class ProductDetailsComponent {
     this.productService.deleteProduct(id).then(r => {
       console.log(r);
     });
-    location.reload();
+    //location.reload();
   }
 
   followUser(seller_id: number, user_id: number) {
