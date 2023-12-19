@@ -74,17 +74,15 @@ urlpatterns = [
     path('ws/user/sell/<int:product_id>', views.sell_product),
     path('ws/product/<int:product_id>', views.get_product),
     path('ws/product/favorites/<int:product_id>', views.get_product_favorites),
-<<<<<<< HEAD
     path('ws/seller/<int:product_id>', views.seller),
-
-    #TODO
-    path('ws/followers/<int:user_id>', views.get_followers)
-=======
+    path('ws/followers/<int:user_id>', views.get_followers),
     path('ws/process_payment', views.post_order),
     path('ws/update_product/<int:product_id>', views.update_product),
     path('ws/user/<str:username>', views.get_user_with_username),
     path('ws/user/comments/<int:user_id>', views.get_user_comments),
->>>>>>> main
 
+    #TODO
+    path('ws/follow_user/<int:user_id>', views.follow_user),
+    path('ws/unfollow_user/<int:user_id>', views.unfollow_user),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

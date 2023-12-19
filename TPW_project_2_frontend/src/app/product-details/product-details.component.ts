@@ -14,6 +14,7 @@ import {FollowerService} from "../follower.service";
 import {ActivatedRoute} from "@angular/router";
 import {CurrentUserService} from "../current-user.service";
 import {Router} from "@angular/router";
+import {window} from "rxjs";
 
 
 @Component({
@@ -25,6 +26,7 @@ import {Router} from "@angular/router";
 })
 export class ProductDetailsComponent {
   product: Product = {} as Product;
+  rating: number = 0;
   user: User = {} as User;
   seller: User = {} as User;
   favorite: boolean = false;
@@ -54,11 +56,11 @@ export class ProductDetailsComponent {
             });
             this.followerService.getFollowers(this.seller.id).then((followers: User[]) => {
               console.log("Followers: ", followers, " for user: ", this.seller);
-              if (followers.find(f => !(this.user) || f.id == this.user.id)) {
-                console.log("User is following the seller: ", this.seller);
+              if (followers.find(f => f.id == this.user.id)) {
+                console.log("User is following seller: ", this.seller);
                 this.isFollowingSeller = true;
               } else {
-                console.log("User is not following the seller: ", this.seller);
+                console.log("User is not following seller: ", this.seller);
                 this.isFollowingSeller = false;
               }
             });
@@ -95,14 +97,14 @@ export class ProductDetailsComponent {
     this.favoriteService.addFavorite(product_id).then(r => {
       console.log(r);
     });
-    window.location.reload();
+    location.reload();
   }
 
   removeFavorite(id: number) {
     this.favoriteService.removeFavorite(id).then(r => {
       console.log(r);
     });
-    window.location.reload();
+    location.reload();
   }
 
 
@@ -110,7 +112,29 @@ export class ProductDetailsComponent {
     this.productService.deleteProduct(id).then(r => {
       console.log(r);
     });
-    window.location.reload();
+    location.reload();
+  }
+
+  followUser(seller_id: number, user_id: number) {
+    this.followerService.followUser(seller_id, user_id).then(r => {
+      console.log(r);
+    });
+    location.reload();
+  }
+
+  unfollowUser(seller_id: number, user_id: number) {
+    this.followerService.unfollowUser(seller_id, user_id).then(r => {
+      console.log(r);
+    });
+    location.reload();
+  }
+
+  reload(){
+    location.reload();
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 }
 

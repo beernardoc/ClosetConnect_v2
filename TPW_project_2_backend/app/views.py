@@ -1333,9 +1333,13 @@ def seller(request, product_id):
 @api_view(['GET'])
 def get_followers(request, user_id):
     try:
+        users = []
         user = User.objects.get(id=user_id)
         followers = Follower.objects.filter(followed=user)
-        serializer = FollowerSerializer(followers, many=True)
+        for follower in followers:
+            users.append(follower.follower)
+
+        serializer = UserSerializer(users, many=True)
 
         return Response(serializer.data)
     except User.DoesNotExist:
@@ -1423,3 +1427,45 @@ def get_user_comments(request, user_id):
     except Comment.DoesNotExist:
         print("Comment does not exist")
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['POST'])
+def follow_user(request, user_id):
+    try:
+        follower_id = request.data['follower_id']
+        follower = User.objects.get(id=follower_id)
+        user = User.objects.get(id=user_id)
+
+        follow, created = Follower.objects.get_or_create(followed=user, follower=follower)
+
+        if created:
+            follow.save()
+
+        return Response(status=status.HTTP_201_CREATED)
+
+    except User.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    except Follower.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['POST'])
+def unfollow_user(request, user_id):
+    try:
+        follower_id = request.data['follower_id']
+        follower = User.objects.get(id=follower_id)
+        user = User.objects.get(id=user_id)
+
+        follow = Follower.objects.get(follower=follower, followed=user)
+        follow.delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    except User.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    except Follower.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+
