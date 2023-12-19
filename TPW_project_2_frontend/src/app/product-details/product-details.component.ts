@@ -15,6 +15,7 @@ import {ActivatedRoute} from "@angular/router";
 import {CurrentUserService} from "../current-user.service";
 import {Router} from "@angular/router";
 import {window} from "rxjs";
+import {Comment} from "../comment";
 
 
 @Component({
@@ -27,6 +28,7 @@ import {window} from "rxjs";
 export class ProductDetailsComponent {
   product: Product = {} as Product;
   rating: number = 0;
+  count = 0;
   user: User = {} as User;
   seller: User = {} as User;
   favorite: boolean = false;
@@ -37,6 +39,8 @@ export class ProductDetailsComponent {
   favoriteService: FavoriteService = inject(FavoriteService);
   followerService: FollowerService = inject(FollowerService);
   currentUserService: CurrentUserService = inject(CurrentUserService);
+  comments: Comment[] = [];
+  userService: UserService = inject(UserService);
 
   constructor(private router: ActivatedRoute, private location: Location) {
     let productID = this.router.snapshot.paramMap.get('product_id');
@@ -89,6 +93,33 @@ export class ProductDetailsComponent {
         }
       });
     });
+
+    this.userService.getUserComments(this.seller.id)
+      .then((comments: Comment[]) => {
+        this.comments = comments;
+        for (let comment of this.comments) {
+          this.userService.getUser(comment.user_id)
+            .then((user: User) => {
+              comment.image = user.image_base64
+              comment.name = user.name
+              const me = localStorage.getItem('id')
+              if (user.admin || (me && parseInt(me) === user.id)) {
+                comment.alter = true
+              }
+              this.count = this.count + 1;
+              this.rating = this.rating + comment.rating;
+              console.log(comment)
+            })
+            .catch((error) => {
+              console.error('Error fetching user:', error);
+            });
+          this.rating = this.rating / this.count;
+        }
+
+      })
+      .catch((error) => {
+        console.error('Error fetching comments:', error);
+      });
   }
 
 
