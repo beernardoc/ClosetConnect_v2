@@ -1,0 +1,96 @@
+<section class="py-5">
+  <div class="container">
+    <div class="row gx-5">
+      <aside class="col-lg-6">
+        <div class="mb-4">
+          <h3 class="text-muted">Personal Info</h3>
+          <div class="border rounded p-3" style="background-color: #f5f5f5;">
+            <form [formGroup]="form">
+              <div class="mb-3">
+                <label for="id_Name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="id_Name" formControlName="Name">
+                <span id="NameError" style="color: red;" *ngIf="form.get('Name')?.hasError('required')">Enter a valid name</span>
+              </div>
+
+              <div class="mb-3">
+                <label for="id_Email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="id_Email" formControlName="Email">
+                <span id="EmailError" style="color: red;"
+                      *ngIf="form.get('Email')?.hasError('required')">Enter a valid email</span>
+                <span id="EmailError2" style="color: red;"
+                      *ngIf="form.get('Email')?.hasError('invalidEmail')">Enter a valid email</span>              </div>
+
+              <div class="mb-3">
+                <label for="id_Address" class="form-label">Address</label>
+                <input type="text" class="form-control" id="id_Address" formControlName="Address">
+                <span id="AddressError" style="color: red;" *ngIf="form.get('Address')?.hasError('required')">Enter a valid address</span>
+              </div>
+
+              <div class="mb-3">
+                <label for="id_Phone" class="form-label">Phone</label>
+                <input type="text" class="form-control" id="id_Phone" formControlName="Phone">
+                <span id="PhoneError" style="color: red;" *ngIf="form.get('Phone')?.hasError('required')">Enter a valid phone number</span>
+              </div>
+
+              <div class="mb-3">
+                <label for="id_Observation" class="form-label">Observation</label>
+                <textarea class="form-control" id="id_Observation"  formControlName="Observation"></textarea>
+              </div>
+
+              <button type="button" class="btn btn-primary" (click)="sendForm()">Submit</button>
+            </form>
+
+          </div>
+
+        </div>
+      </aside>
+
+
+
+
+
+
+      <main class="col-lg-6">
+        <div class="ps-lg-3">
+
+          <h3 class="text-muted">Order Review</h3>
+
+          <ng-container *ngFor="let item of products; let i = index">
+            <div class="card mb-3 border border-2 border-success rounded">
+              <div class="row g-0">
+                <div class="col-md-4">
+                  <div>
+                    <!-- Use [src] para atribuir dinamicamente a imagem Blob à tag img -->
+                    <img [src]="getImageUrl(i)" alt="Product Image" class="img-fluid">
+                  </div>
+                </div>
+                <div class="col-md-8">
+                  <div class="card-body">
+                    <h5 class="card-title">{{ item['key'] }}</h5>
+                    <p class="card-text text-muted">Price: ${{ item['value'][0]['price'] }}</p>
+                    <p class="card-text"><small class="text-muted">Sold by: {{ item['value'][0]['user_id']}}</small></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+
+
+          <h5 class="text-muted">Resume</h5>
+          <div class="card mb-3 rounded"  style="background-color: #f5f5f5;">
+            <div class="row g-0">
+              <div class="col-md-8">
+                <div class="card-body">
+                  <p class="card-text">Total Items: {{products.length}}</p>
+                  <p class="card-text">Total to Pay: {{ price}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+      </main>
+    </div>
+  </div>
+</section>

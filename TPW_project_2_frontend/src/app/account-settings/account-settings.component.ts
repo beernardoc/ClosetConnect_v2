@@ -80,7 +80,6 @@ export class AccountSettingsComponent {
           base64 = base64.split(',')[1];
           this.user.image_base64 = base64;
           this.user.image = base64;
-          console.log(this.user);
           this.currentUserService.updateUser(this.user)
             .then((success: boolean) => {
               if (success) {
