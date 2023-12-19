@@ -139,8 +139,8 @@ export class ProductService {
     const data: Response = await fetch(url);
     const seller: User = await data.json() ?? null;
     if (seller) {
-      const blob: Blob = base64toBlob(seller.image, "image/jpg");
-      seller.image = URL.createObjectURL(blob);
+      const blob: Blob = base64toBlob(seller.image_base64, "image/jpg");
+      seller.image_base64 = URL.createObjectURL(blob);
     }
     return seller;
   }

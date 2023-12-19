@@ -5,7 +5,7 @@ import {Favorite} from "../favorite";
 import {UserService} from "../user.service";
 import {ProductService} from "../product.service";
 import {FavoriteService} from "../favorite.service";
-import {CommonModule, Location} from "@angular/common";
+import {CommonModule, Location, NgOptimizedImage} from "@angular/common";
 import {ProductsComponent} from "../products/products.component";
 import {UsersComponent} from "../users/users.component";
 import {FormsModule} from "@angular/forms";
@@ -19,7 +19,7 @@ import {Router} from "@angular/router";
 @Component({
   selector: 'app-product-details',
   standalone: true,
-  imports: [CommonModule, ProductsComponent, UsersComponent, FormsModule, RouterLink],
+  imports: [CommonModule, ProductsComponent, UsersComponent, FormsModule, RouterLink, NgOptimizedImage],
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.css'
 })

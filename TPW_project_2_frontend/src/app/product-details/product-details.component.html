@@ -186,11 +186,11 @@
               <h5 class="card-title">Other Products by <b> &#64; {{ seller.username }}</b></h5>
               <ng-container *ngFor="let other_product of other_products">
               <div class="d-flex mb-3">
-                <a href="" class="me-3">
-                  <img src="/media/{{ other_product.image }}" style="min-width: 96px; height: 96px;" class="img-md img-thumbnail" />
+                <a [routerLink]="'../' + other_product.id" class="me-3">
+                  <img src="{{ other_product.image_base64 }}" style="min-width: 96px; height: 96px;" class="img-md img-thumbnail" />
                 </a>
                 <div class="info">
-                  <a href="/product/{{ other_product.id }}" class="nav-link mb-1" style="text-decoration: none; color: #4d5154">
+                  <a [routerLink]="'../' + other_product.id" class="nav-link mb-1" style="text-decoration: none; color: #4d5154">
                     {{ other_product.name }}
                   </a>
                   <strong class="text-dark" style="margin-left: 20px"> {{ other_product.price }}€</strong>

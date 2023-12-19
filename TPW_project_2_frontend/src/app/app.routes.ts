@@ -23,7 +23,6 @@ export const routes: Routes = [
   { path: 'account/settings', component: AccountSettingsComponent },
   { path: 'favorites', component: FavoritesComponent },
   { path: 'account/profile', component: AccountProfileComponent },
-  { path: 'product/:product_id', component: ProductDetailsComponent},
   { path: 'account/product/:id', component: AccountProductComponent },
   { path: 'product/:product_id', component: ProductDetailsComponent},
 ];
