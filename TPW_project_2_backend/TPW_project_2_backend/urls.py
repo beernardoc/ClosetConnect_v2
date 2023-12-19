@@ -64,7 +64,7 @@ urlpatterns = [
     path('ws/update_profile/<int:user_id>', views.update_profile),
     path('ws/update_cart', views.update_cart),
     path('ws/favorites', views.get_favorites),
-    path('ws/favorite_products', views.get_favorite_products),
+    path('ws/favorite_products/<int:user_id>', views.get_favorite_products),
     path('ws/add_favorite', views.add_favorite),
     path('ws/remove_favorite/<int:product_id>', views.remove_favorite),
     path('ws/delete_user/<int:user_id>', views.delete_user),
@@ -74,7 +74,10 @@ urlpatterns = [
     path('ws/user/sell/<int:product_id>', views.sell_product),
     path('ws/product/<int:product_id>', views.get_product),
     path('ws/product/favorites/<int:product_id>', views.get_product_favorites),
-    path('ws/seller', views.seller),
+    path('ws/seller/<int:product_id>', views.seller),
+
+    #TODO
+    path('ws/followers/<int:user_id>', views.get_followers)
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

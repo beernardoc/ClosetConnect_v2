@@ -12,6 +12,9 @@ import {FormsModule} from "@angular/forms";
 import {RouterLink} from "@angular/router";
 import {FollowerService} from "../follower.service";
 import {ActivatedRoute} from "@angular/router";
+import {CurrentUserService} from "../current-user.service";
+import {Router} from "@angular/router";
+
 
 @Component({
   selector: 'app-product-details',
@@ -21,67 +24,93 @@ import {ActivatedRoute} from "@angular/router";
   styleUrl: './product-details.component.css'
 })
 export class ProductDetailsComponent {
-  product : Product = {} as Product;
-  user : User = {} as User;
-  seller : User = {} as User;
-  favorite : boolean = false;
-  followers : number = 0;
-  userService: UserService = inject(UserService);
+  product: Product = {} as Product;
+  user: User = {} as User;
+  seller: User = {} as User;
+  favorite: boolean = false;
+  seller_followers: number = 0;
+  isFollowingSeller: boolean = false;
+  other_products: Product[] = [];
   productService: ProductService = inject(ProductService);
   favoriteService: FavoriteService = inject(FavoriteService);
   followerService: FollowerService = inject(FollowerService);
+  currentUserService: CurrentUserService = inject(CurrentUserService);
 
   constructor(private router: ActivatedRoute, private location: Location) {
-    let productID  = this.router.snapshot.paramMap.get('product_id');
+    let productID = this.router.snapshot.paramMap.get('product_id');
 
     if (typeof productID === "string") {
       this.productService.getProduct(parseInt(productID))
         .then((product: Product) => {
+          console.log("Got the product: ", product);
           this.product = product;
-        })
+          this.productService.getSeller(this.product.id).then((seller: User) => {
+            this.seller = seller;
+            console.log("Got the seller: ", this.seller, " for product: ", this.product);
+            this.followerService.getNumFollowers(this.seller.id).then((followers: number) => {
+              console.log("Number of followers: ", followers, " for user: ", this.seller);
+              this.seller_followers = followers;
+              console.log(" Favorite: ", this.favorite, " Followers: ", this.seller_followers);
+            });
+            this.followerService.getFollowers(this.seller.id).then((followers: User[]) => {
+              console.log("Followers: ", followers, " for user: ", this.seller);
+              if (followers.find(f => !(this.user) || f.id == this.user.id)) {
+                console.log("User is following the seller: ", this.seller);
+                this.isFollowingSeller = true;
+              } else {
+                console.log("User is not following the seller: ", this.seller);
+                this.isFollowingSeller = false;
+              }
+            });
+            this.productService.getUserProducts(this.seller.id).then((products: Product[]) => {
+              console.log("Other Products: ", products, " for seller: ", this.seller);
+              for (let product of products) {
+                if (product.id != this.product.id) {
+                  this.other_products.push(product);
+                }
+              }
+            });
+          });
+        });
     }
 
-      this.userService.getCurrentUser().then((user: User) => {
-        this.user = user;
+    this.currentUserService.getCurrentUser().then((user: User) => {
+      console.log("Got the user: ", user);
+      this.user = user;
+      this.favoriteService.getFavoriteProducts(this.user.id).then((products: Product[]) => {
+        if (products.find(p => !(this.product) || p.id == this.product.id)) {
+          console.log("Product is a favorite of the user: ", this.user);
+          this.favorite = true;
+        } else {
+          console.log("Product is not a favorite of the user: ", this.user);
+          this.favorite = false;
+        }
       });
-
+    });
   }
 
-  addFavorite(product_id : number) {
+
+
+  addFavorite(product_id: number) {
     this.favoriteService.addFavorite(product_id).then(r => {
       console.log(r);
     });
+    window.location.reload();
   }
 
   removeFavorite(id: number) {
     this.favoriteService.removeFavorite(id).then(r => {
       console.log(r);
     });
+    window.location.reload();
   }
 
-  getSeller() {
-    this.productService.getSeller().then((user: User) => {
-      this.seller = user;
-    });
-  }
-
-  getFavorite() {
-    this.favoriteService.getFavoriteProducts().then((products: Product[]) => {
-      if (products.find(p => !(this.product) || p.id == this.product.id)) {
-        this.favorite = true;
-      }
-    });
-  }
 
   deleteProduct(id: number) {
     this.productService.deleteProduct(id).then(r => {
       console.log(r);
     });
-  }
-
-  getNumFollowers(user_id: number) {
-    this.followerService.getNumFollowers(user_id).then((followers: number) => {
-      this.followers = followers;
-    });
+    window.location.reload();
   }
 }
+

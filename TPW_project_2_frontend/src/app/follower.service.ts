@@ -19,4 +19,10 @@ export class FollowerService {
     const data: Response = await fetch(url);
     return await data.json() ?? 0;
   }
+
+  async getFollowers(user_id: number): Promise<any[]> {
+    const url: string = this.baseUrl + "followers/" + user_id;
+    const data: Response = await fetch(url);
+    return await data.json() ?? [];
+  }
 }

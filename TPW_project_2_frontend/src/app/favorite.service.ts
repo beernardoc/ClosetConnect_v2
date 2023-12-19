@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Favorite} from "./favorite";
 import {Product} from "./product";
+import {base64toBlob} from "./utils";
 
 @Injectable({
   providedIn: 'root'
@@ -16,10 +17,15 @@ export class FavoriteService {
     return await data.json() ?? [];
   }
 
-  async getFavoriteProducts(): Promise<Product[]> {
-    const url: string = this.baseUrl + "favorite_products";
+  async getFavoriteProducts(user_id : number): Promise<Product[]> {
+    const url: string = this.baseUrl + "favorite_products/" + user_id;
     const data: Response = await fetch(url);
-    return await data.json() ?? [];
+    const products: Product[] = await data.json() ?? [];
+    for (let product of products) {
+      const blob: Blob = base64toBlob(product.image, "image/jpg");
+      product.image = URL.createObjectURL(blob);
+    }
+    return products;
   }
 
   async addFavorite(product_id : number): Promise<Response> {
@@ -28,7 +34,7 @@ export class FavoriteService {
       const data: Response = await fetch(url, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({product_id: product_id, username: localStorage.getItem("username")})
+        body: JSON.stringify({product_id: product_id, user_id: localStorage.getItem("id")})
       });
 
       if (!data.ok) {
@@ -48,7 +54,7 @@ export class FavoriteService {
       const data: Response = await fetch(url, {
         method: "DELETE",
         headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({id: id})
+        body: JSON.stringify({product_id: id, user_id: localStorage.getItem("id")})
       });
 
       if (!data.ok) {

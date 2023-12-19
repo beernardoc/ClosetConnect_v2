@@ -35,16 +35,6 @@ export class UserService {
     return user;
   }
 
-  async getCurrentUser(): Promise<User> {
-    const url: string = this.baseUrl + "current_user";
-    const data: Response = await fetch(url);
-    const user: User = await data.json() ?? null;
-    if (user) {
-      const blob: Blob = base64toBlob(user.image, "image/jpg");
-      user.image = URL.createObjectURL(blob);
-    }
-    return user;
-  }
 
   async deleteUser(id: number): Promise<Response> {
     try {

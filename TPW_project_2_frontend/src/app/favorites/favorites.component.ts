@@ -9,6 +9,7 @@ import {ProductsComponent} from "../products/products.component";
 import {UsersComponent} from "../users/users.component";
 import {FormsModule} from "@angular/forms";
 import {RouterLink} from "@angular/router";
+import {CurrentUserService} from "../current-user.service";
 
 @Component({
   selector: 'app-favorites',
@@ -21,20 +22,21 @@ export class FavoritesComponent {
   favorite_products: Product[] = [];
   favorites: Favorite[] = [];
   user : User = {} as User;
-  userService: UserService = inject(UserService);
   favoriteService: FavoriteService = inject(FavoriteService);
+  currentUserService: CurrentUserService = inject(CurrentUserService);
 
   constructor() {
     this.favoriteService.getFavorites().then((favourites: Favorite[]) => {
       this.favorites = favourites;
     });
 
-    this.userService.getCurrentUser().then((user: User) => {
+    this.currentUserService.getCurrentUser().then((user: User) => {
       this.user = user;
+      this.favoriteService.getFavoriteProducts(this.user.id).then((favorite_products: Product[]) => {
+        this.favorite_products = favorite_products;
+      });
     });
 
-    this.favoriteService.getFavoriteProducts().then((favorite_products: Product[]) => {
-      this.favorite_products = favorite_products;
-    });
+
   }
 }

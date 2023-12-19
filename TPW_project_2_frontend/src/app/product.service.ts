@@ -134,8 +134,8 @@ export class ProductService {
     return await data.json() ?? [];
   }
 
-  async getSeller()   {
-    const url: string = this.baseUrl + "seller";
+  async getSeller(product_id: number)   {
+    const url: string = this.baseUrl + "seller/" + product_id;
     const data: Response = await fetch(url);
     const seller: User = await data.json() ?? null;
     if (seller) {

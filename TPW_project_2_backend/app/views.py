@@ -1081,15 +1081,21 @@ def get_favorites(request):
         return JsonResponse({'status': 'error', 'message': 'Favorites not found'}, status=404)
 
 @api_view(['GET'])
-def get_favorite_products(request):
+def get_favorite_products(request, user_id):
     try:
         products = []
-        name = request.GET['username']
-        user = User.objects.get(username=name)
-        favorites = Favorite.objects.filter(user_id=user.id)
+        user = User.objects.get(id=user_id)
+        favorites = Favorite.objects.filter(user_id=user)
+        image_base64 = []
         for favorite in favorites:
-            products.append(Product.objects.filter(id=favorite.product_id))
+            products.append(favorite.product_id)
+            image = favorite.product_id.image
+            image_base64.append(base64.b64encode(image.read()))
+
+
         serializer = ProductSerializer(products, many=True)
+        for i in range(len(serializer.data)):
+            serializer.data[i]['image'] = image_base64[i]
 
         return Response(serializer.data)
 
@@ -1105,20 +1111,20 @@ def get_favorite_products(request):
 
 @api_view(['POST'])
 def add_favorite(request):
-    username = request.data['username']
+    user_id = request.data['user_id']
     product_id = request.data['product_id']
 
     try:
         product = get_object_or_404(Product, id=product_id)
-        user = User.objects.get(username=username)
-        favorite, created = Favorite.objects.get_or_create(user_id=user.id, product_id=product.id)
+        user = User.objects.get(id=user_id)
+        favorite, created = Favorite.objects.get_or_create(user_id=user, product_id=product)
 
         if not created:
             pass
 
         else:
-            favorite.user_id = request.user.id
-            favorite.product_id = data.product_id
+            favorite.user_id = user
+            favorite.product_id = product
             favorite.save()
         return Response(status=status.HTTP_201_CREATED)
 
@@ -1132,14 +1138,24 @@ def add_favorite(request):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['DELETE'])
-def remove_favorite(request, favourite_id):
+def remove_favorite(request, product_id):
     try:
-        favorite = get_object_or_404(Favorite, id=favourite_id)
+        user_id = request.data['user_id']
+        user = get_object_or_404(User, id=user_id)
+        product = get_object_or_404(Product, id=product_id)
+
+        favorite = get_object_or_404(Favorite, user_id=user, product_id=product)
         favorite.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     except Favorite.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Favorite not found'}, status=404)
+
+    except User.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'User not found'}, status=404)
+
+    except Product.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Product not found'}, status=404)
 
 @api_view(['DELETE'])
@@ -1271,12 +1287,31 @@ def get_product_favorites(request, product_id):
         return JsonResponse({'status': 'error', 'message': 'Favorites not found'}, status=404)
 
 @api_view(['GET'])
-def seller(request):
-    product = request.product
+def seller(request, product_id):
     try:
-        user = User.objects.get(id=product.user_id)
+        product = Product.objects.get(id=product_id)
+        user = product.user_id
         serializer = UserSerializer(user)
         return Response(serializer.data)
     except User.DoesNotExist:
         print("Seller does not exist")
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+    except Product.DoesNotExist:
+        print("Product does not exist")
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['GET'])
+def get_followers(request, user_id):
+    try:
+        user = User.objects.get(id=user_id)
+        followers = Follower.objects.filter(followed=user)
+        serializer = FollowerSerializer(followers, many=True)
+
+        return Response(serializer.data)
+    except User.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    except Follower.DoesNotExit:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
