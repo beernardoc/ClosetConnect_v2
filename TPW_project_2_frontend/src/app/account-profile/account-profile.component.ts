@@ -5,11 +5,12 @@ import {ProductService} from "../product.service";
 import {User} from "../user";
 import {Product} from "../product";
 import {CommonModule} from "@angular/common";
+import {RouterLink} from "@angular/router";
 
 @Component({
   selector: 'app-account-profile',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './account-profile.component.html',
   styleUrl: './account-profile.component.css'
 })

@@ -1343,3 +1343,24 @@ def update_product(request, product_id):
         print("Product does not exist")
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+# get user with username, REST API
+@api_view(['GET'])
+def get_user_with_username(request, username):
+    try:
+        user = User.objects.get(username=username)
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+    except User.DoesNotExist:
+        print("User does not exist")
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+# get all the comments for a user, REST API
+@api_view(['GET'])
+def get_user_comments(request, user_id):
+    try:
+        comments = Comment.objects.filter(seller_id=user_id)
+        serializer = CommentSerializer(comments, many=True)
+        return Response(serializer.data)
+    except Comment.DoesNotExist:
+        print("Comment does not exist")
+        return Response(status=status.HTTP_404_NOT_FOUND)

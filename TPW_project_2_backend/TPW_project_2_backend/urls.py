@@ -77,6 +77,8 @@ urlpatterns = [
     path('ws/product/favorites/<int:product_id>', views.get_product_favorites),
     path('ws/process_payment', views.post_order),
     path('ws/update_product/<int:product_id>', views.update_product),
+    path('ws/user/<str:username>', views.get_user_with_username),
+    path('ws/user/comments/<int:user_id>', views.get_user_comments),
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

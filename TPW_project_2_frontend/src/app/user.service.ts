@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {User} from "./user";
+import {Comment} from "./comment";
 
 @Injectable({
   providedIn: 'root'
@@ -25,12 +26,12 @@ export class UserService {
   }
 
   async getUser(id: number): Promise<User> {
-    const url: string = this.baseUrl + "users/" + id;
+    const url: string = this.baseUrl + "user/" + id;
     const data: Response = await fetch(url);
     const user: User = await data.json() ?? null;
     if (user) {
-      const blob: Blob = base64toBlob(user.image, "image/jpg");
-      user.image = URL.createObjectURL(blob);
+      const blob: Blob = base64toBlob(user.image_base64, "image/jpg");
+      user.image_base64 = URL.createObjectURL(blob);
     }
     return user;
   }
@@ -64,6 +65,23 @@ export class UserService {
       console.error("Error deleting user:", error);
       throw error;
     }
+  }
+
+  async getUserByUsername(username: string): Promise<User> {
+    const url: string = this.baseUrl + "user/" + username;
+    const data: Response = await fetch(url);
+    const user: User = await data.json() ?? null;
+    if (user) {
+      const blob: Blob = base64toBlob(user.image_base64, "image/jpg");
+      user.image_base64 = URL.createObjectURL(blob);
+    }
+    return user;
+  }
+
+  async getUserComments(id: number): Promise<Comment[]> {
+    const url: string = this.baseUrl + "user/comments/" + id;
+    const data: Response = await fetch(url);
+    return await data.json() ?? [];
   }
 }
 
