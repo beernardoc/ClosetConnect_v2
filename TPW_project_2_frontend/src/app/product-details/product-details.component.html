@@ -141,10 +141,10 @@
                     <form action="." method="post">
                       <div class="d-flex pt-1">
                         <ng-container *ngIf="user">
-                          <a href="/profile/{{ seller.username }}" class="btn btn-outline-primary me-1 flex-grow-1">View Profile</a>
+                          <a routerLink="/profile/{{ seller.username }}" class="btn btn-outline-primary me-1 flex-grow-1">View Profile</a>
                         </ng-container>
                         <ng-container *ngIf="!user">
-                          <a [routerLink]="'/login'" class="btn btn-outline-primary me-1 flex-grow-1">View Profile</a>
+                          <a routerLink="/login" class="btn btn-outline-primary me-1 flex-grow-1">View Profile</a>
                         </ng-container>
                         <ng-container *ngIf="!isFollowingSeller">
                         <ng-container *ngIf="user">
@@ -184,11 +184,11 @@
               <h5 class="card-title">Other Products by <b>  &#64;{{ seller.username }}</b></h5>
               <ng-container *ngFor="let other_product of other_products">
               <div class="d-flex mb-3">
-                <a [routerLink]="'/product/' + other_product.id" class="me-3" (click)="reload()">
+                <a href="/product/{{other_product.id}}" class="me-3">
                   <img src="{{ other_product.image_base64 }}" style="min-width: 96px; height: 96px;" class="img-md img-thumbnail" />
                 </a>
                 <div class="info">
-                  <a [routerLink]="'/product/' + other_product.id" (click)="reload()" class="nav-link mb-1" style="text-decoration: none; color: #4d5154" >
+                  <a href="/product/{{other_product.id}}" class="nav-link mb-1" style="text-decoration: none; color: #4d5154" >
                     {{ other_product.name }}
                   </a>
                   <strong class="text-dark" style="margin-left: 20px"> {{ other_product.price }}€</strong>
