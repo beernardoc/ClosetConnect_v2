@@ -28,7 +28,7 @@ import {Comment} from "../comment";
 export class ProductDetailsComponent {
   product: Product = {} as Product;
   rating: number = 0;
-  count = 0;
+  count: number = 0;
   user: User = {} as User;
   seller: User = {} as User;
   favorite: boolean = false;
@@ -94,14 +94,12 @@ export class ProductDetailsComponent {
                       this.rating = this.rating + comment.rating;
                       console.log("Our Rating: ", this.rating)
                       console.log(comment)
+                      this.updateRating(); // Move the rating update here
                     })
                     .catch((error) => {
                       console.error('Error fetching user:', error);
                     });
                 }
-                this.rating = this.rating / this.count;
-                console.log("Rating: ", this.rating)
-
               })
               .catch((error) => {
                 console.error('Error fetching comments:', error);
@@ -125,7 +123,15 @@ export class ProductDetailsComponent {
     });
   }
 
-
+  // Move the rating update logic to a separate function
+  updateRating() {
+    if (this.count > 0) {
+      this.rating = this.rating / this.count;
+      console.log("Rating: ", this.rating);
+    } else {
+      console.log("No comments available, rating set to 0");
+    }
+  }
 
   addFavorite(product_id: number) {
     this.favoriteService.addFavorite(product_id).then(r => {
