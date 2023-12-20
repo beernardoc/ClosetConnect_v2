@@ -63,6 +63,10 @@
                 <form [formGroup]="commentForm" (ngSubmit)="onSubmit()">
                   <textarea type="text" id="comment" name="comment" class="form-control" placeholder="Write a comment..."
                          style="height: 120px;resize: none" formControlName="comment"></textarea>
+                  <!-- comment required error -->
+                  <div *ngIf="commentError" class="alert alert-danger">
+                    To post a comment, you must write something.
+                  </div>
 
                   <div class="rating">
                     <input type="radio" id="star5" name="rating_input" value="5" formControlName="rating_input" (click)="onRatingChange($event)">
@@ -75,6 +79,10 @@
                     <label for="star2" title="2 stars"></label>
                     <input type="radio" id="star1" name="rating_input" value="1" formControlName="rating_input" (click)="onRatingChange($event)">
                     <label for="star1" title="1 star"></label>
+                  </div>
+                  <!-- rating required error -->
+                  <div *ngIf="ratingError" class="alert alert-danger">
+                    To post a comment, you must give a rating.
                   </div>
                   <div>
                     <input style="margin-top: 10px" type="submit" class="btn btn-primary" value="Post Comment">

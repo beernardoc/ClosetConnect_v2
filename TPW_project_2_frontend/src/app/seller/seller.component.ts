@@ -42,6 +42,8 @@ export class SellerComponent {
   favoriteProducts: Product[] = [];
   commentForm!: FormGroup;
   selectedRating: string = "0";
+  commentError: boolean = false;
+  ratingError: boolean = false;
 
   followerService: FollowerService = inject(FollowerService);
   productService: ProductService = inject(ProductService);
@@ -218,11 +220,14 @@ export class SellerComponent {
   }
 
   onSubmit() {
-    if (this.commentForm.valid) {
+    if (this.commentForm.valid && this.selectedRating != "0") {
+      this.commentError = false;
+      this.ratingError = false;
       let comment = this.commentForm.value.comment;
       let rating = this.selectedRating;
       console.log(comment, rating);
       this.commentForm.reset();
+      this.selectedRating = "0";
       this.comments.unshift({
         id: this.comments.length + 1,
         text: comment,
@@ -242,6 +247,11 @@ export class SellerComponent {
         .catch((error) => {
           console.error('Error adding comment to database:', error);
         });
+    }
+    else {
+      // Display error message
+      this.commentError = this.commentForm.value.comment == "" || this.commentForm.value.comment == null;
+      this.ratingError = this.selectedRating == "0" || this.selectedRating == "";
     }
   }
 }
