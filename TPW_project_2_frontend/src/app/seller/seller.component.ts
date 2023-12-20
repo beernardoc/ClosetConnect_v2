@@ -9,6 +9,7 @@ import {ActivatedRoute, RouterLink} from "@angular/router";
 import {UserService} from "../user.service";
 import {Comment} from "../comment";
 import {FavoriteService} from "../favorite.service";
+import {CommentService} from "../comment.service";
 
 @Component({
   selector: 'app-seller',
@@ -44,6 +45,7 @@ export class SellerComponent {
   userService: UserService = inject(UserService);
   currentUserService: CurrentUserService = inject(CurrentUserService);
   favoriteService: FavoriteService = inject(FavoriteService);
+  commentService: CommentService = inject(CommentService);
 
   constructor(private router: ActivatedRoute, private location: Location) {
     let username = this.router.snapshot.paramMap.get('username');
@@ -190,9 +192,17 @@ export class SellerComponent {
   removeComment(event : any): void {
     // get the comment id from the button id
     let commentId = event.target.id.split("_")[1];
-
     // remove the comment from the DOM
     let comment = document.getElementById("comment_" + commentId);
     comment?.remove();
+
+    // remove the comment from the database
+    this.commentService.removeComment(commentId)
+      .then(() => {
+        console.log("Removed comment from database");
+      })
+      .catch((error) => {
+        console.error('Error removing comment from database:', error);
+      });
   }
 }

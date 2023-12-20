@@ -1468,4 +1468,13 @@ def unfollow_user(request, user_id):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 
+@api_view(['DELETE'])
+def delete_comment(request, comment_id):
+    try:
+        comment = Comment.objects.get(id=comment_id)
+        comment.delete()
 
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    except Comment.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Comment not found'}, status=404)
