@@ -76,24 +76,6 @@ export class SellerComponent {
               console.error('Error fetching following:', error);
             });
 
-          this.productService.getUserProducts(this.user.id)
-            .then((products: Product[]) => {
-              this.products = products;
-              this.favoriteService.getFavoriteProducts(this.currentUser.id)
-                .then((products: Product[]) => {
-                  this.favoriteProducts = products;
-                  for (let product of this.products) {
-                    product.favorite = this.favoriteProducts.find(p => p.id == product.id) != undefined;
-                  }
-                })
-                .catch((error) => {
-                  console.error('Error fetching favorite products:', error);
-                });
-            })
-            .catch((error) => {
-              console.error('Error fetching products:', error);
-            });
-
           this.userService.getUserComments(this.user.id)
             .then((comments: Comment[]) => {
               this.comments = comments;
@@ -128,6 +110,24 @@ export class SellerComponent {
                 this.isFollowing = false;
               }
             });
+
+            this.productService.getUserProducts(this.user.id)
+              .then((products: Product[]) => {
+                this.products = products;
+                this.favoriteService.getFavoriteProducts(this.currentUser.id)
+                  .then((products: Product[]) => {
+                    this.favoriteProducts = products;
+                    for (let product of this.products) {
+                      product.favorite = this.favoriteProducts.find(p => p.id == product.id) != undefined;
+                    }
+                  })
+                  .catch((error) => {
+                    console.error('Error fetching favorite products:', error);
+                  });
+              })
+              .catch((error) => {
+                console.error('Error fetching products:', error);
+              });
           });
         })
         .catch((error) => {
