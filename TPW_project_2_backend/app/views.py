@@ -1422,6 +1422,8 @@ def get_user_with_username(request, username):
 def get_user_comments(request, user_id):
     try:
         comments = Comment.objects.filter(seller_id=user_id)
+        # order by the most recent to the oldest
+        comments = comments.order_by('-id')
         serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data)
     except Comment.DoesNotExist:
@@ -1478,3 +1480,26 @@ def delete_comment(request, comment_id):
 
     except Comment.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Comment not found'}, status=404)
+
+@api_view(['POST'])
+def add_comment(request):
+    try:
+        data = json.loads(request.body)
+        text = data['text']
+        rating = data['rating']
+        user_id = data['user_id']
+        seller_id = data['seller_id']
+
+        user = User.objects.get(id=user_id)
+        seller = User.objects.get(id=seller_id)
+
+        comment = Comment.objects.create(text=text, rating=rating, user_id=user, seller_id=seller)
+        comment.save()
+
+        return Response(status=status.HTTP_201_CREATED)
+
+    except User.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    except Comment.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)

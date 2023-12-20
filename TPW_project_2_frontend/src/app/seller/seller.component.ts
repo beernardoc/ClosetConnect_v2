@@ -233,6 +233,15 @@ export class SellerComponent {
         name: this.currentUser.name,
         alter: true
       });
+
+      // add the comment to the database
+      this.commentService.addComment(comment, parseInt(rating), this.currentUser.id, this.user.id)
+        .then(() => {
+          console.log("Added comment to database");
+        })
+        .catch((error) => {
+          console.error('Error adding comment to database:', error);
+        });
     }
   }
 }

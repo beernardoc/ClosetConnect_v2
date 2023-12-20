@@ -15,8 +15,16 @@ export class CommentService {
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({id: id})
     });
-  } catch (error: any) {
-    console.log("Error deleting comment:", error);
-    return error;
   }
+
+  async addComment(text: string, rating: number, user_id: number, seller_id: number ): Promise<Response> {
+    const url: string = this.baseUrl + "add_comment";
+    return await fetch(url, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({text: text, rating: rating, user_id: user_id, seller_id: seller_id})
+    });
+  }
+
+
 }
