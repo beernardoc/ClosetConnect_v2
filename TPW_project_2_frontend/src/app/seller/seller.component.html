@@ -45,13 +45,11 @@
                   <span class="align-middle">View</span>
                 </a>
               </div>
-              <div class="col-4">
-<!--                {% if product not in favorites %}-->
-<!--                <button type="button" data-value="{{ product.id }}" class="favorite btn btn-outline-danger w-100 p-3 rounded-0 text-center"><i class="fa-regular fa-heart"></i></button>-->
-<!--                {% else %}-->
-<!--                <button type="button" data-value="{{ product.id }}" class="favorite btn btn-danger w-100 p-3 rounded-0 text-center"><i class="fa-regular fa-heart"></i></button>-->
-<!--                {% endif %}-->
-                <button type="button" data-value="{{ product.id }}" class="favorite btn btn-outline-danger w-100 p-3 rounded-0 text-center"><i class="bi bi-heart"></i></button>
+              <div class="col-4" *ngIf="product.favorite">
+                <button type="button" id="fav_{{ product.id }}" data-value="{{ product.id }}" class="favorite btn btn-danger w-100 p-3 rounded-0 text-center" (click)="changeFav($event)"><i class="bi bi-heart"></i></button>
+              </div>
+              <div class="col-4" *ngIf="!product.favorite">
+                <button type="button" id="fav_{{ product.id }}" data-value="{{ product.id }}" class="favorite btn btn-outline-danger w-100 p-3 rounded-0 text-center" (click)="changeFav($event)"><i class="bi bi-heart"></i></button>
               </div>
             </div>
           </div>

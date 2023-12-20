@@ -8,6 +8,7 @@ import {CommonModule, Location} from "@angular/common";
 import {ActivatedRoute, RouterLink} from "@angular/router";
 import {UserService} from "../user.service";
 import {Comment} from "../comment";
+import {FavoriteService} from "../favorite.service";
 
 @Component({
   selector: 'app-seller',
@@ -36,11 +37,13 @@ export class SellerComponent {
   products: Product[] = [];
   comments: Comment[] = [];
   isFollowing: boolean = false;
+  favoriteProducts: Product[] = [];
 
   followerService: FollowerService = inject(FollowerService);
   productService: ProductService = inject(ProductService);
   userService: UserService = inject(UserService);
   currentUserService: CurrentUserService = inject(CurrentUserService);
+  favoriteService: FavoriteService = inject(FavoriteService);
 
   constructor(private router: ActivatedRoute, private location: Location) {
     let username = this.router.snapshot.paramMap.get('username');
@@ -69,6 +72,17 @@ export class SellerComponent {
           this.productService.getUserProducts(this.user.id)
             .then((products: Product[]) => {
               this.products = products;
+              this.favoriteService.getFavoriteProducts(this.currentUser.id)
+                .then((products: Product[]) => {
+                  this.favoriteProducts = products;
+                  for (let product of this.products) {
+                    product.favorite = this.favoriteProducts.find(p => p.id == product.id) != undefined;
+                    console.log(product.favorite, product.id);
+                  }
+                })
+                .catch((error) => {
+                  console.error('Error fetching favorite products:', error);
+                });
             })
             .catch((error) => {
               console.error('Error fetching products:', error);
@@ -139,5 +153,38 @@ export class SellerComponent {
         console.error('Error unfollowing user:', error);
       });
     location.reload();
+  }
+
+  changeFav(event : any): void {
+    // get the product id from the button id
+    let productId = event.target.id.split("_")[1];
+
+    // if the class has "btn-outline-danger" change it to "btn-danger" and vice versa
+    console.log(event.target.classList);
+    if (event.target.classList.contains("btn-outline-danger")) {
+      event.target.classList.remove("btn-outline-danger");
+      event.target.classList.add("btn-danger");
+
+      // add the product to favorites
+      this.favoriteService.addFavorite(productId)
+        .then(() => {
+          console.log("Added product to favorites");
+        })
+        .catch((error) => {
+          console.error('Error adding product to favorites:', error);
+        });
+    } else {
+      event.target.classList.remove("btn-danger");
+      event.target.classList.add("btn-outline-danger");
+
+      // remove the product from favorites
+      this.favoriteService.removeFavorite(productId)
+        .then(() => {
+          console.log("Removed product from favorites");
+        })
+        .catch((error) => {
+          console.error('Error removing product from favorites:', error);
+        });
+    }
   }
 }

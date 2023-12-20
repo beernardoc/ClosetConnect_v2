@@ -25,7 +25,8 @@ export class AccountEditProductComponent {
     brand: "",
     category: "",
     color: "",
-    image_base64: ""
+    image_base64: "",
+    favorite: false
   }
   updateProductForm!: FormGroup;
   productService: ProductService = inject(ProductService);

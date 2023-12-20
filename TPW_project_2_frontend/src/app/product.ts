@@ -10,4 +10,5 @@ export interface Product {
   category: string;
   color: string;
   image_base64: string;
+  favorite: boolean;
 }
