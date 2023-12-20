@@ -77,7 +77,6 @@ export class SellerComponent {
                   this.favoriteProducts = products;
                   for (let product of this.products) {
                     product.favorite = this.favoriteProducts.find(p => p.id == product.id) != undefined;
-                    console.log(product.favorite, product.id);
                   }
                 })
                 .catch((error) => {
@@ -186,5 +185,14 @@ export class SellerComponent {
           console.error('Error removing product from favorites:', error);
         });
     }
+  }
+
+  removeComment(event : any): void {
+    // get the comment id from the button id
+    let commentId = event.target.id.split("_")[1];
+
+    // remove the comment from the DOM
+    let comment = document.getElementById("comment_" + commentId);
+    comment?.remove();
   }
 }
