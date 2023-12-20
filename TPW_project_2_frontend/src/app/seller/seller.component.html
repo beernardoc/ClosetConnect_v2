@@ -9,16 +9,14 @@
       <h2 class="cover-heading pt-2">{{ user.name }}</h2>
       <p class="text-secondary cover-heading mb-5">{{at}}{{ user.username }}</p>
 
-<!--      {% if user not in  followers %}<button type="submit" class="btn btn-primary" name="follow">{% bs_icon 'person-plus-fill' %} Follow</button>-->
-<!--      {% else %}<button type="submit" class="btn btn-secondary" name="unfollow">{% bs_icon 'person-dash-fill' %} Unfollow</button>{% endif %}-->
-      <div class="mb-2" style="margin-top: -30px" *ngIf="!isFollowing">
+      <div id="follow_{{ user.id }}" class="mb-2" style="margin-top: -30px" *ngIf="!isFollowing">
         <button type="submit" class="btn btn-primary" name="follow" (click)="followUser()"><i class="bi bi-person-add"></i> Follow</button>
       </div>
-      <div class="mb-2" style="margin-top: -30px" *ngIf="isFollowing">
+      <div id="follow_{{ user.id }}" class="mb-2" style="margin-top: -30px" *ngIf="isFollowing">
         <button type="submit" class="btn btn-secondary" name="unfollow" (click)="unfollowUser()"><i class="bi bi-person-dash"></i> UnFollow</button>
       </div>
 
-      <p class="lead">Followers <b>{{ followers }}</b> | Following <b>{{ following }}</b></p>
+      <p class="lead">Followers <b id="followers">{{ followers }}</b> | Following <b>{{ following }}</b></p>
     </div>
     <div class="row">
       <ng-container *ngFor="let product of products">
@@ -62,20 +60,20 @@
           <div class="card shadow-0 border" style="background-color: #f0f2f5;">
             <div class="card-body p-4">
               <div class="form-outline mb-4">
-                <form action="." method="post">
+                <form [formGroup]="commentForm" (ngSubmit)="onSubmit()">
                   <textarea type="text" id="comment" name="comment" class="form-control" placeholder="Write a comment..."
-                         style="height: 120px;resize: none"></textarea>
+                         style="height: 120px;resize: none" formControlName="comment"></textarea>
 
                   <div class="rating">
-                    <input type="radio" id="star5" name="rating_input" value="5">
+                    <input type="radio" id="star5" name="rating_input" value="5" formControlName="rating_input" (click)="onRatingChange($event)">
                     <label for="star5" title="5 stars"></label>
-                    <input type="radio" id="star4" name="rating_input" value="4">
+                    <input type="radio" id="star4" name="rating_input" value="4" formControlName="rating_input" (click)="onRatingChange($event)">
                     <label for="star4" title="4 stars"></label>
-                    <input type="radio" id="star3" name="rating_input" value="3">
+                    <input type="radio" id="star3" name="rating_input" value="3" formControlName="rating_input" (click)="onRatingChange($event)">
                     <label for="star3" title="3 stars"></label>
-                    <input type="radio" id="star2" name="rating_input" value="2">
+                    <input type="radio" id="star2" name="rating_input" value="2" formControlName="rating_input" (click)="onRatingChange($event)">
                     <label for="star2" title="2 stars"></label>
-                    <input type="radio" id="star1" name="rating_input" value="1">
+                    <input type="radio" id="star1" name="rating_input" value="1" formControlName="rating_input" (click)="onRatingChange($event)">
                     <label for="star1" title="1 star"></label>
                   </div>
                   <div>

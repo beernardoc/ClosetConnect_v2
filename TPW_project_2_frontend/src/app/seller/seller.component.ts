@@ -10,11 +10,12 @@ import {UserService} from "../user.service";
 import {Comment} from "../comment";
 import {FavoriteService} from "../favorite.service";
 import {CommentService} from "../comment.service";
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-seller',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, ReactiveFormsModule, FormsModule],
   templateUrl: './seller.component.html',
   styleUrl: './seller.component.css'
 })
@@ -39,6 +40,8 @@ export class SellerComponent {
   comments: Comment[] = [];
   isFollowing: boolean = false;
   favoriteProducts: Product[] = [];
+  commentForm!: FormGroup;
+  selectedRating: string = "0";
 
   followerService: FollowerService = inject(FollowerService);
   productService: ProductService = inject(ProductService);
@@ -47,7 +50,7 @@ export class SellerComponent {
   favoriteService: FavoriteService = inject(FavoriteService);
   commentService: CommentService = inject(CommentService);
 
-  constructor(private router: ActivatedRoute, private location: Location) {
+  constructor(private router: ActivatedRoute, private location: Location, private formBuilder: FormBuilder) {
     let username = this.router.snapshot.paramMap.get('username');
     if (typeof username === "string") {
       this.userService.getUserByUsername(username)
@@ -129,6 +132,10 @@ export class SellerComponent {
           console.error('Error fetching current user:', error);
         });
 
+      this.commentForm = this.formBuilder.group({
+        comment: ['', [Validators.required]],
+        rating_input: ['0', [Validators.required]]
+      });
     }
   }
 
@@ -204,5 +211,28 @@ export class SellerComponent {
       .catch((error) => {
         console.error('Error removing comment from database:', error);
       });
+  }
+
+  onRatingChange(event : any): void {
+    this.selectedRating = event.target.value;
+  }
+
+  onSubmit() {
+    if (this.commentForm.valid) {
+      let comment = this.commentForm.value.comment;
+      let rating = this.selectedRating;
+      console.log(comment, rating);
+      this.commentForm.reset();
+      this.comments.unshift({
+        id: this.comments.length + 1,
+        text: comment,
+        rating: parseInt(rating),
+        user_id: this.currentUser.id,
+        seller_id: this.user.id,
+        image: this.currentUser.image_base64,
+        name: this.currentUser.name,
+        alter: true
+      });
+    }
   }
 }
