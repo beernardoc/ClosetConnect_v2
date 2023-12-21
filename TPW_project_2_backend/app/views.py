@@ -19,13 +19,17 @@ from django.urls import reverse
 
 # Rest Framework
 from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from app.serializers import UserSerializer, ProductSerializer, CommentSerializer, FollowerSerializer, \
-    FavoriteSerializer, CartSerializer, CartItemSerializer
+    FavoriteSerializer, CartSerializer, CartItemSerializer, AuthUserSerializer
 
+# Authentication
 from rest_framework.authtoken.models import Token
+from django.contrib.auth.models import User as AuthUser
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import authentication_classes, permission_classes
+from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 
 
 # Create your views here.
@@ -749,33 +753,45 @@ def get_explore_products(request):
 # Authenticating a user, REST API
 @api_view(['POST'])
 def loginREST(request):
-    username = request.POST['username']
-    password = request.POST['password']
-    user = authenticate(username=username, password=password)
-    if user is not None and user.is_active:
-        serializer = UserSerializer(user)
-        auth_login(request, user)
-        return Response(serializer.data)
-    else:
+    user = get_object_or_404(AuthUser, username=request.data['username'])
+    if not user.check_password(request.data['password']):
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+    token, created = Token.objects.get_or_create(user=user)
+    serializer = AuthUserSerializer(instance=user)
+    return Response({'token': token.key, 'user': serializer.data})
 
 
 # Registering a user, REST API
 @api_view(['POST'])
 def registerREST(request):
-    serializer = UserSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        user = authenticate(username=request.data['username'], password=request.data['password'])
-        auth_login(request, user)
-        # Create user in our database
-        user = User.objects.create(username=request.data['username'], email=request.data['email'],
-                                   password=request.data['password'],
-                                   name=request.data['name'])
+    try:
+        data = json.loads(request.body)
+        username = data['username']
+        name = data['name']
+        email = data['email']
+        password = data['password']
+        user = User.objects.create(username=username, name=name, email=email, password=password)
+        # make the image the default image
+        user.image = 'user_no_picture.png'
         user.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        user_serializer = UserSerializer(user)
 
-    else:
+        # create the data for the auth user
+        serializer = AuthUserSerializer(data=request.data)
+        print("serializer: ", serializer)
+        if serializer.is_valid():
+            serializer.save()
+            user = AuthUser.objects.get(username=request.data['username'])
+            user.set_password(request.data['password'])
+            token = Token.objects.create(user=user)
+
+            return Response({'token': token.key, 'user': user_serializer.data})
+        else:
+            print(serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except User.DoesNotExist:
+        print("User does not exist")
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 
@@ -937,8 +953,21 @@ def new_user(request):
         # make the image the default image
         user.image = 'user_no_picture.png'
         user.save()
-        serializer = UserSerializer(user)
-        return Response(serializer.data)
+        user_serializer = UserSerializer(user)
+
+        # create the data for the auth user
+        serializer = AuthUserSerializer(data=request.data)
+        print("serializer: ", serializer)
+        if serializer.is_valid():
+            serializer.save()
+            user = AuthUser.objects.get(username=request.data['username'])
+            user.set_password(request.data['password'])
+            token = Token.objects.create(user=user)
+
+            return Response({'token': token.key, 'user': user_serializer.data})
+        else:
+            print(serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     except User.DoesNotExist:
         print("User does not exist")
         return Response(status=status.HTTP_404_NOT_FOUND)
@@ -1503,3 +1532,10 @@ def add_comment(request):
 
     except Comment.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+# example of how to use authentication
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def example(request):
+    return Response({'message': 'You are authenticated {}'.format(request.user.username)})

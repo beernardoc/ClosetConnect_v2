@@ -82,6 +82,7 @@ urlpatterns = [
     path('ws/user/comments/<int:user_id>', views.get_user_comments),
     path('ws/remove_comment/<int:comment_id>', views.delete_comment),
     path('ws/add_comment', views.add_comment),
+    path('ws/example', views.example),
 
     #TODO
     path('ws/follow_user/<int:user_id>', views.follow_user),

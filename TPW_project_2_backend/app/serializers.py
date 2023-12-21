@@ -2,7 +2,13 @@ import base64
 
 from app.models import User, Product, Comment, Follower, Favorite, Cart, CartItem
 from rest_framework import serializers
+from django.contrib.auth.models import User as AuthUser
 
+
+class AuthUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AuthUser
+        fields = ['id', 'username', 'password', 'email']
 
 class UserSerializer(serializers.ModelSerializer):
     image_base64 = serializers.SerializerMethodField()
