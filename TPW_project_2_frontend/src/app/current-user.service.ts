@@ -32,23 +32,6 @@ export class CurrentUserService {
     return user;
   }
 
-  async updateUserImage(image: string, user_id:number): Promise<User> {
-    const url: string = this.baseUrl + "update_user_image/" + user_id;
-    const data: Response = await fetch(url, {
-      method: 'POST',
-      body: JSON.stringify(
-        {
-          image: image
-        }
-      ),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    const user: User = await data.json() ?? [];
-    return user;
-  }
-
   async updateUser(user: User): Promise<boolean> {
     const url: string = this.baseUrl + "update_user/" + user.id;
     const data: Response = await fetch(url, {

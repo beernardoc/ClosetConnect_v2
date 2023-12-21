@@ -34,6 +34,13 @@ export class AccountEditProductComponent {
 
   constructor(private router: ActivatedRoute, private location: Location, private formBuilder: FormBuilder, private route: Router) {
     let productID  = this.router.snapshot.paramMap.get('id');
+    const token = localStorage.getItem("token");
+    if (token == null) {
+      this.route.navigate(['login']);
+    }
+    // if the product is not from the user, redirect to the home page
+
+
 
     if (typeof productID === "string") {
       this.productService.getProduct(parseInt(productID))

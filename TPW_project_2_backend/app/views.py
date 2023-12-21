@@ -931,6 +931,16 @@ def get_user(request):
     except User.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+@api_view(['GET'])
+def get_user_by_id(request, user_id):
+    # returns the user with the given token
+    try:
+        user = User.objects.get(id=user_id)
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+    except User.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
 @api_view(['DELETE'])
 def delete_user(request, user_id):
     try:

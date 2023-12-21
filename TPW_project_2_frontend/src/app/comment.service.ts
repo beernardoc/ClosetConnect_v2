@@ -17,7 +17,7 @@ export class CommentService {
     });
   }
 
-  async addComment(text: string, rating: number, user_id: number, seller_id: number ): Promise<Response> {
+  async addComment(text: string, rating: number, user_id: number, seller_id: number): Promise<Response> {
     const url: string = this.baseUrl + "add_comment";
     return await fetch(url, {
       method: "POST",
