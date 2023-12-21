@@ -7,11 +7,12 @@ import {Product} from "../product";
 import {CommonModule} from "@angular/common";
 import {RouterLink} from "@angular/router";
 import {ProductComponent} from "../product/product.component";
+import {ProfileHeaderComponent} from "../profile-header/profile-header.component";
 
 @Component({
   selector: 'app-account-profile',
   standalone: true,
-  imports: [CommonModule, RouterLink, ProductComponent],
+  imports: [CommonModule, RouterLink, ProductComponent, ProfileHeaderComponent],
   templateUrl: './account-profile.component.html',
   styleUrl: './account-profile.component.css'
 })
@@ -28,7 +29,6 @@ export class AccountProfileComponent {
     sold: 0,
     image_base64: ""
   };
-  at: string = "@";
 
   followers: number = 0;
   following: number = 0;

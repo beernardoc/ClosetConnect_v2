@@ -12,11 +12,12 @@ import {FavoriteService} from "../favorite.service";
 import {CommentService} from "../comment.service";
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {ProductComponent} from "../product/product.component";
+import {ProfileHeaderComponent} from "../profile-header/profile-header.component";
 
 @Component({
   selector: 'app-seller',
   standalone: true,
-  imports: [CommonModule, RouterLink, ReactiveFormsModule, FormsModule, ProductComponent],
+  imports: [CommonModule, RouterLink, ReactiveFormsModule, FormsModule, ProductComponent, ProfileHeaderComponent],
   templateUrl: './seller.component.html',
   styleUrl: './seller.component.css'
 })
