@@ -10,7 +10,7 @@ export class LoginUserService {
   constructor() { }
 
   async login(username: string, password: string): Promise<boolean> {
-    const url: string = this.baseUrl + "loginUser";
+    const url: string = this.baseUrl + "login";
     const data: Response = await fetch(url, {
       method: "POST",
       headers: {
@@ -21,13 +21,14 @@ export class LoginUserService {
         password: password
       })
     });
-    const user: User = await data.json() ?? [];
-    if (user.id === 0) {
+    // the response is {'token': token.key, 'user': serializer.data}
+    // we want to store the token in local storage
+    const response: any = await data.json();
+    if (response.token) {
+      localStorage.setItem('token', response.token);
+      return true;
+    } else {
       return false;
     }
-    localStorage.setItem("id", user.id.toString());
-    localStorage.setItem("username", user.username);
-
-    return true;
   }
 }

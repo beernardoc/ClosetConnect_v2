@@ -30,9 +30,34 @@ export class ProductService {
 
   async getFollowedProducts(): Promise<Product[]> {
 
-    let id = localStorage.getItem("id");
-    const url: string = this.baseUrl + "followed_products?id=" + id;
-    const data: Response = await fetch(url);
+    let token = localStorage.getItem("token");
+    const url: string = this.baseUrl + "followed_products";
+    const data: Response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Token " + token
+      }
+    });
+
+    const products: Product[] = await data.json() ?? [];
+    for (let product of products) {
+      const blob: Blob = base64toBlob(product.image, "image/jpg");
+      product.image = URL.createObjectURL(blob);
+    }
+    return products;
+  }
+
+  async getExploreProducts(): Promise<Product[]> {
+    let token = localStorage.getItem("token");
+    const url: string = this.baseUrl + "explore_products";
+    const data: Response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Token " + token
+      }
+    });
 
     const products: Product[] = await data.json() ?? [];
     for (let product of products) {

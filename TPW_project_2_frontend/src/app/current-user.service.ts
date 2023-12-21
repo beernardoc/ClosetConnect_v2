@@ -11,21 +11,24 @@ export class CurrentUserService {
   constructor() { }
 
   async getCurrentUser(): Promise<User> {
-    // is being stored in the local storage
-    // we need to get it from there
-    const username: string = localStorage.getItem("username") ?? "";
-    const id: number = parseInt(localStorage.getItem("id") ?? "0");
-    const password: string = localStorage.getItem("password") ?? "";
+    // the user token is stored in the local storage
+    // we need to get it and send it to the server
+    const token: string = localStorage.getItem("token") ?? "";
 
-    const url: string = this.baseUrl + "user/" + id;
-    const data: Response = await fetch(url);
+    const url: string = this.baseUrl + "user";
+    const data: Response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Token ' + token
+      }
+    });
     const user: User = await data.json() ?? [];
     // image is a base64 string
     // we need to convert it to a blob
     // and then to a url
     const blob: Blob =  base64toBlob(user.image_base64, "image/jpg");
     user.image_base64 = URL.createObjectURL(blob);
-    console.log(user);
     return user;
   }
 

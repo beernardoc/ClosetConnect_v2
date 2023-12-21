@@ -33,7 +33,7 @@ export class RegisterComponent {
     });
 
     // if the user is already logged in, redirect to home page
-    if (localStorage.getItem("id") !== null && localStorage.getItem("id") !== "0") {
+    if (localStorage.getItem('token')) {
       window.location.href = "/";
     }
   }

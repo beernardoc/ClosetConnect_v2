@@ -44,17 +44,14 @@ urlpatterns = [
     path("account/favorites/", views.favorites, name="favorites"),
 
     # REST API
+    path('ws/users', views.get_users),
+    path('ws/user', views.get_user),
     path('ws/products', views.get_products),
     path('ws/followed_products', views.get_followed_products),
     path('ws/explore_products', views.get_explore_products),
-    path('ws/register', views.registerREST),
-    path('ws/login', views.loginREST),
+
     path('ws/current_user', views.current_user),
     path('ws/no_user_image', views.no_user_image),
-    path('ws/users', views.get_users),
-    path('ws/user/<int:user_id>', views.get_user),
-    path('ws/loginUser', views.get_user_with_username_and_password),
-    path('ws/registerUser', views.new_user),
     path('ws/add_product_to_cart', views.post_item_cart),
     path('ws/cart', views.get_cart),
     path('ws/delete_product/<int:product_id>', views.delete_product),
@@ -82,7 +79,10 @@ urlpatterns = [
     path('ws/user/comments/<int:user_id>', views.get_user_comments),
     path('ws/remove_comment/<int:comment_id>', views.delete_comment),
     path('ws/add_comment', views.add_comment),
-    path('ws/example', views.example),
+
+    ## Authentication
+    path('ws/register', views.registerREST),
+    path('ws/login', views.loginREST),
 
     #TODO
     path('ws/follow_user/<int:user_id>', views.follow_user),

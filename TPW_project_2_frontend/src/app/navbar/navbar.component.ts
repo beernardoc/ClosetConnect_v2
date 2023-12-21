@@ -51,7 +51,6 @@ export class NavbarComponent {
       })
       .catch((error) => {
         console.error('Error fetching current user:', error);
-
       });
   }
 }

@@ -702,12 +702,13 @@ def get_products(request):
 
 
 @api_view(['GET'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def get_followed_products(request):
-    user_id = int(request.GET['id']) if request.GET['id'] != "null" else None
+    username = request.user.username
 
     try:
-
-        user = User.objects.get(id=user_id)
+        user = User.objects.get(username=username)
         followers = Follower.objects.filter(follower=user)
         followers_id = [follower.followed.id for follower in followers]
         products = Product.objects.filter(user_id__in=followers_id)
@@ -726,11 +727,13 @@ def get_followed_products(request):
 
 
 @api_view(['GET'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def get_explore_products(request):
-    user_id = int(request.GET['id'])
+    username = request.user.username
 
     try:
-        user = User.objects.get(id=user_id)
+        user = User.objects.get(username=username)
         followers = Follower.objects.filter(follower=user)
         followers_id = [follower.followed.id for follower in followers]
         products = Product.objects.exclude(user_id__in=followers_id)
@@ -755,6 +758,7 @@ def get_explore_products(request):
 def loginREST(request):
     user = get_object_or_404(AuthUser, username=request.data['username'])
     if not user.check_password(request.data['password']):
+        print("Wrong password")
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     token, created = Token.objects.get_or_create(user=user)
@@ -784,6 +788,7 @@ def registerREST(request):
             serializer.save()
             user = AuthUser.objects.get(username=request.data['username'])
             user.set_password(request.data['password'])
+            user.save()
             token = Token.objects.create(user=user)
 
             return Response({'token': token.key, 'user': user_serializer.data})
@@ -914,64 +919,17 @@ def get_users(request):
 
 # get a user from the database, REST API
 @api_view(['GET'])
-def get_user(request, user_id):
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_user(request):
+    # returns the user with the given token
+    username = request.user.username
     try:
-        user = User.objects.get(id=user_id)
+        user = User.objects.get(username=username)
         serializer = UserSerializer(user)
         return Response(serializer.data)
     except User.DoesNotExist:
-        print("User does not exist")
         return Response(status=status.HTTP_404_NOT_FOUND)
-
-
-# get user from the database with username and password, REST API
-@api_view(['POST'])
-def get_user_with_username_and_password(request):
-    try:
-        data = json.loads(request.body)
-        username = data['username']
-        password = data['password']
-
-        user = User.objects.get(username=username, password=password)
-        serializer = UserSerializer(user)
-        return Response(serializer.data)
-    except User.DoesNotExist:
-        print("User does not exist")
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-
-# create a new user, REST API
-@api_view(['POST'])
-def new_user(request):
-    try:
-        data = json.loads(request.body)
-        username = data['username']
-        name = data['name']
-        email = data['email']
-        password = data['password']
-        user = User.objects.create(username=username, name=name, email=email, password=password)
-        # make the image the default image
-        user.image = 'user_no_picture.png'
-        user.save()
-        user_serializer = UserSerializer(user)
-
-        # create the data for the auth user
-        serializer = AuthUserSerializer(data=request.data)
-        print("serializer: ", serializer)
-        if serializer.is_valid():
-            serializer.save()
-            user = AuthUser.objects.get(username=request.data['username'])
-            user.set_password(request.data['password'])
-            token = Token.objects.create(user=user)
-
-            return Response({'token': token.key, 'user': user_serializer.data})
-        else:
-            print(serializer.errors)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    except User.DoesNotExist:
-        print("User does not exist")
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
 
 @api_view(['DELETE'])
 def delete_user(request, user_id):

@@ -10,7 +10,7 @@ export class RegisterUserService {
   constructor() { }
 
   async register(username: string, name: string, email: string, password: string): Promise<boolean> {
-    const url: string = this.baseUrl + "registerUser";
+    const url: string = this.baseUrl + "register";
     const data: Response = await fetch(url, {
       method: "POST",
       headers: {
@@ -23,12 +23,14 @@ export class RegisterUserService {
         password: password
       })
     });
-    const user: User = await data.json() ?? [];
+    // it returns {'token': token.key, 'user': serializer.data}
+    const response: any = await data.json() ?? null;
+    const user: User = response.user;
     if (user.id === 0) {
       return false;
     }
-    localStorage.setItem("id", user.id.toString());
-    localStorage.setItem("username", user.username);
+    // we have a token for the user, store it in the local storage
+    localStorage.setItem("token", response.token);
 
     return true;
   }
