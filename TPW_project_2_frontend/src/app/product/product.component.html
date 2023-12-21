@@ -1,0 +1,101 @@
+<div class="col-md-4 mt-5">
+  <div class="card h-100 border-0 rounded-0 shadow" style="width: 25rem; height: 500px;">
+    <img src="{{ product.image }}" class="card-img-top rounded-0" alt="..." style="height: 500px; object-fit: cover;">
+    <div class="card-body d-flex flex-column mt-3 mb-3">
+      <div class="row mt-auto">
+        <div class="col-10">
+          <h4 class="card-title">{{ product.name }}</h4>
+          <p class="card-text text-muted" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; max-height: 3em;">
+            {{ product.description }}
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="row align-items-center text-center g-0">
+      <div class="col-4">
+        <h5>{{ product.price }}€</h5>
+      </div>
+      <ng-container *ngIf="layout === 1">
+        <div class="col-4">
+          <a href="/product/{{product.id}}" class="btn btn-info w-100 p-3 rounded-0 text-center">
+            <i class="bi bi-eye" style="pointer-events: none"></i>
+            <span class="align-middle">View</span>
+          </a>
+        </div>
+        <div class="col-4">
+          <a class="btn btn-success w-100 p-3 rounded-0 text-center" data-toggle="modal" data-target="#buyModal" (click)="productService.addProductToCart(product.id)" >
+            <i class="bi bi-cart-plus" style="pointer-events: none"></i>
+            <span class="align-middle"> Buy</span>
+          </a>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="layout === 2">
+        <div class="col-4">
+          <a routerLink="/account/product/{{ product.id }}" class="btn btn-info w-100 p-3 rounded-0 text-center">
+            <i class="bi bi-eye me-2" style="pointer-events: none"></i>
+            <span class="align-middle">View</span>
+          </a>
+        </div>
+        <div class="col-4">
+          <button class="btn btn-danger w-100 p-3 rounded-0 text-center" data-bs-toggle="modal" [attr.data-bs-target]="'#deleteModal_' + product.id">
+            <i class="bi bi-trash me-2" style="pointer-events: none"></i>
+            <span class="align-middle">Delete</span>
+          </button>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="layout === 3">
+        <div class="col-4">
+          <a routerLink="/product/{{ product.id }}" class="btn btn-info w-100 p-3 rounded-0 text-center">
+            <i class="bi bi-eye me-2"></i>
+            <span class="align-middle">View</span>
+          </a>
+        </div>
+        <div class="col-4" *ngIf="product.favorite">
+          <button type="button" id="fav_{{ product.id }}" data-value="{{ product.id }}" class="favorite btn btn-danger w-100 p-3 rounded-0 text-center" (click)="changeFav($event)"><i class="bi bi-heart" style="pointer-events: none"></i></button>
+        </div>
+        <div class="col-4" *ngIf="!product.favorite">
+          <button type="button" id="fav_{{ product.id }}" data-value="{{ product.id }}" class="favorite btn btn-outline-danger w-100 p-3 rounded-0 text-center" (click)="changeFav($event)"><i class="bi bi-heart" style="pointer-events: none"></i></button>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
+
+<ng-container *ngIf="layout === 2">
+  <!-- Delete Modal -->
+  <div class="modal fade" id="deleteModal_{{ product.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Deleting</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="." method="post">
+          <div class="modal-body ">
+            <div class="form-row">
+              Are you sure you want to delete {{ product.name }}?
+              <div class="d-flex justify-content-center align-items-center mt-3">
+                <div class="card h-100 border-0 rounded-0 shadow" style="width: 25rem;">
+                  <img src="{{ product.image }}" class="card-img-top rounded-0" alt="...">
+                  <div class="card-body d-flex flex-column mt-3 mb-3">
+                    <div class="row mt-auto">
+                      <div class="col-10">
+                        <h4 class="card-title">{{ product.name }}</h4>
+                        <p>{{ product.description }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <input type="submit" class="btn btn-success" name="sold_{{ product.id }}" value="Sold!" (click)="soldProduct(product.id)"/>
+            <input type="submit" class="btn btn-danger" name="delete_{{ product.id }}" value="Delete Product" (click)="deleteProduct(product.id)"/>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-container>

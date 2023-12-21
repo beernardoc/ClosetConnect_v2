@@ -6,11 +6,12 @@ import {User} from "../user";
 import {Product} from "../product";
 import {CommonModule} from "@angular/common";
 import {RouterLink} from "@angular/router";
+import {ProductComponent} from "../product/product.component";
 
 @Component({
   selector: 'app-account-profile',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, ProductComponent],
   templateUrl: './account-profile.component.html',
   styleUrl: './account-profile.component.css'
 })
@@ -70,37 +71,4 @@ export class AccountProfileComponent {
         console.error('Error fetching current user:', error);
       });
   }
-
-  deleteProduct(productID: number): void {
-    this.productService.deleteProduct(productID)
-      .then(() => {
-        this.productService.getUserProducts(this.user.id)
-          .then((products: Product[]) => {
-            this.products = products;
-          })
-          .catch((error) => {
-            console.error('Error fetching products:', error);
-          });
-      })
-      .catch((error) => {
-        console.error('Error deleting product:', error);
-      });
-  }
-
-  soldProduct(productID: number): void {
-    this.productService.sellProduct(productID)
-      .then(() => {
-        this.productService.getUserProducts(this.user.id)
-          .then((products: Product[]) => {
-            this.products = products;
-          })
-          .catch((error) => {
-            console.error('Error fetching products:', error);
-          });
-      })
-      .catch((error) => {
-        console.error('Error selling product:', error);
-      });
-  }
-
 }

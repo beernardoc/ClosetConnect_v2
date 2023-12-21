@@ -1,7 +1,6 @@
 import {Component, inject} from '@angular/core';
 import {Product} from "../product";
 import {CommonModule, JsonPipe, NgForOf} from "@angular/common";
-import {ProductsComponent} from "../products/products.component";
 import {CartService} from "./cart.service";
 
 @Component({

@@ -2,12 +2,13 @@ import { Component, inject } from '@angular/core';
 import {Product} from "../product";
 import {ProductService} from "../product.service";
 import {CommonModule} from "@angular/common";
+import {ProductComponent} from "../product/product.component";
 
 
 @Component({
   selector: 'app-index',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ProductComponent],
   templateUrl: './index.component.html',
   styleUrl: './index.component.css'
 })

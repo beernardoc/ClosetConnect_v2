@@ -11,11 +11,12 @@ import {Comment} from "../comment";
 import {FavoriteService} from "../favorite.service";
 import {CommentService} from "../comment.service";
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
+import {ProductComponent} from "../product/product.component";
 
 @Component({
   selector: 'app-seller',
   standalone: true,
-  imports: [CommonModule, RouterLink, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, RouterLink, ReactiveFormsModule, FormsModule, ProductComponent],
   templateUrl: './seller.component.html',
   styleUrl: './seller.component.css'
 })
@@ -163,39 +164,6 @@ export class SellerComponent {
         console.error('Error unfollowing user:', error);
       });
     location.reload();
-  }
-
-  changeFav(event : any): void {
-    // get the product id from the button id
-    let productId = event.target.id.split("_")[1];
-
-    // if the class has "btn-outline-danger" change it to "btn-danger" and vice versa
-    console.log(event.target.classList);
-    if (event.target.classList.contains("btn-outline-danger")) {
-      event.target.classList.remove("btn-outline-danger");
-      event.target.classList.add("btn-danger");
-
-      // add the product to favorites
-      this.favoriteService.addFavorite(productId)
-        .then(() => {
-          console.log("Added product to favorites");
-        })
-        .catch((error) => {
-          console.error('Error adding product to favorites:', error);
-        });
-    } else {
-      event.target.classList.remove("btn-danger");
-      event.target.classList.add("btn-outline-danger");
-
-      // remove the product from favorites
-      this.favoriteService.removeFavorite(productId)
-        .then(() => {
-          console.log("Removed product from favorites");
-        })
-        .catch((error) => {
-          console.error('Error removing product from favorites:', error);
-        });
-    }
   }
 
   removeComment(event : any): void {

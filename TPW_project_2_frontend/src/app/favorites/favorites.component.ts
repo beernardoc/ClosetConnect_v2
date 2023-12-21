@@ -6,7 +6,6 @@ import {UserService} from "../user.service";
 import {FavoriteService} from "../favorite.service";
 import {ProductService} from "../product.service";
 import {CommonModule} from "@angular/common";
-import {ProductsComponent} from "../products/products.component";
 import {UsersComponent} from "../users/users.component";
 import {FormsModule} from "@angular/forms";
 import {RouterLink} from "@angular/router";
@@ -15,7 +14,7 @@ import {CurrentUserService} from "../current-user.service";
 @Component({
   selector: 'app-favorites',
   standalone: true,
-  imports: [CommonModule, ProductsComponent, UsersComponent, FormsModule, RouterLink],
+  imports: [CommonModule, UsersComponent, FormsModule, RouterLink],
   templateUrl: './favorites.component.html',
   styleUrl: './favorites.component.css'
 })
