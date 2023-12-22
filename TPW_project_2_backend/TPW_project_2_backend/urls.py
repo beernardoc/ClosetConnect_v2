@@ -75,13 +75,13 @@ urlpatterns = [
     path('ws/delete_user/<int:user_id>', views.delete_user),
     path('ws/user/<str:username>', views.get_user_with_username),
     path('ws/user/comments/<int:user_id>', views.get_user_comments),
+    path('ws/cart', views.get_cart),
+    path('ws/update_cart', views.update_cart),
+    path('ws/process_payment', views.post_order),
 
     ### NOT USED ###
     path('ws/current_user', views.current_user),
     path('ws/no_user_image', views.no_user_image),
-    path('ws/cart', views.get_cart),
-    path('ws/update_cart', views.update_cart),
-    path('ws/process_payment', views.post_order),
     ### NOT USED ###
 
     ## Authentication

@@ -860,8 +860,8 @@ def post_item_cart(request):
 @api_view(['GET'])
 def get_cart(request):
     try:
-        name = request.GET['username']
-        user = User.objects.get(username=name)
+        id = request.GET['id']
+        user = User.objects.get(id=id)
         cart, created = Cart.objects.get_or_create(user=user)
 
         price = round(cart.price, 2)
@@ -1056,10 +1056,10 @@ def update_profile(request, user_id):
 @api_view(['PUT'])
 def update_cart(request):
     try:
-        username = request.data['username']
+        id = request.data['id']
         product_name = request.data['productName']
 
-        user = User.objects.get(username=username)
+        user = User.objects.get(id=id)
 
         cart = Cart.objects.get(user=user)
         cart_item = CartItem.objects.get(product__name=product_name, user=user)

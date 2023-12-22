@@ -11,10 +11,10 @@ export class CartService {
 
   async getProducts(): Promise<any> {
 
-    let username = localStorage.getItem("username")
+    let id = localStorage.getItem("id")
 
 
-    const url: string = this.baseUrl + "cart?username=" + username;
+    const url: string = this.baseUrl + "cart?id=" + id;
 
 
     try {
@@ -37,7 +37,7 @@ export class CartService {
       const data: Response = await fetch(url, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productName: name, username: localStorage.getItem("username") })
+        body: JSON.stringify({ productName: name, id: localStorage.getItem("id") })
       });
 
       if (data.ok) {
