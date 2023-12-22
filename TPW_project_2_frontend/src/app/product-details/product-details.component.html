@@ -49,25 +49,25 @@
               <form action="." method="post">
                 <ng-container *ngIf="!favorite">
                   <ng-container *ngIf="user">
-                    <button class="btn btn-outline-danger" name="favorite" (click)="addFavorite(product.id)">
-                      <i class="bi bi-heart"></i>
+                    <button class="btn btn-outline-danger" name="favorite" (click)="changeFavorite(product.id, $event)">
+                      <i class="bi bi-heart"style="pointer-events: none"></i>
                       Add To Favorites</button>
                   </ng-container>
                   <ng-container *ngIf="!user">
-                    <a href="/login" class="btn btn-outline-danger" >
-                      <i class="bi bi-heart"></i>
+                    <a href="/login" class="btn btn-outline-danger">
+                      <i class="bi bi-heart" style="pointer-events: none"></i>
                       Add To Favorites</a>
                   </ng-container>
                 </ng-container>
                 <ng-container *ngIf="favorite">
                   <ng-container *ngIf="user">
-                    <button class="btn btn-danger" name="remove_favorite" (click)="removeFavorite(product.id)">
-                      <i class="bi bi-heart-fill"></i>
+                    <button class="btn btn-danger" name="remove_favorite" (click)="changeFavorite(product.id, $event)">
+                      <i class="bi bi-heart-fill" style="pointer-events: none"></i>
                       Remove From Favorites</button>
                   </ng-container>
                     <ng-container *ngIf="!user">
                       <a href="/login" class="btn btn-danger" >
-                        <i class="bi bi-heart-fill"></i>
+                        <i class="bi bi-heart-fill" style="pointer-events: none"></i>
                         Remove From Favorites</a>
                     </ng-container>
                 </ng-container>
@@ -148,7 +148,7 @@
                         </ng-container>
                         <ng-container *ngIf="!isFollowingSeller">
                         <ng-container *ngIf="user">
-                          <button type="submit" name="follow" type="button" class="btn btn-primary flex-grow-1" (click)="followUser(seller.id, user.id)">
+                          <button type="submit" name="follow" class="btn btn-primary flex-grow-1" (click)="changeFollow(seller.id, user.id, $event)">
                             <i class="bi bi-person-plus-fill"></i>
                             Follow
                           </button>
@@ -161,7 +161,7 @@
                         </ng-container>
                         </ng-container>
                         <ng-container *ngIf="isFollowingSeller">
-                        <button type="submit" name="unfollow" type="button" class="btn btn-secondary flex-grow-1" (click)="unfollowUser(seller.id, user.id)">
+                        <button type="submit" name="unfollow" class="btn btn-secondary flex-grow-1" (click)="changeFollow(seller.id, user.id, $event)">
                           <i class="bi bi-person-dash-fill"></i>
                           Unfollow
                         </button>

@@ -44,24 +44,32 @@ export class ProfileHeaderComponent {
   followUser(): void {
     this.followerService.followUser(this.user.id, this.currentUser.id)
       .then(() => {
-        this.isFollowing = true;
-        this.followers = this.followers + 1;
+        console.log("User followed");
       })
       .catch((error) => {
         console.error('Error following user:', error);
       });
-    location.reload();
   }
 
   unfollowUser(): void {
     this.followerService.unfollowUser(this.user.id, this.currentUser.id)
       .then(() => {
-        this.isFollowing = false;
-        this.followers = this.followers - 1;
+        console.log("User unfollowed");
       })
       .catch((error) => {
         console.error('Error unfollowing user:', error);
       });
-    location.reload();
+  }
+
+  changeFollow(): void {
+    if (this.isFollowing) {
+      this.unfollowUser();
+      this.isFollowing = false;
+      this.followers--;
+    } else {
+      this.followUser();
+      this.isFollowing = true;
+      this.followers++;
+    }
   }
 }

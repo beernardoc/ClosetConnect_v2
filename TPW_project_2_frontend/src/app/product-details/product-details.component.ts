@@ -139,14 +139,28 @@ export class ProductDetailsComponent {
     this.favoriteService.addFavorite(product_id).then(r => {
       console.log(r);
     });
-    location.reload();
   }
 
   removeFavorite(id: number) {
     this.favoriteService.removeFavorite(id).then(r => {
       console.log(r);
     });
-    location.reload();
+  }
+
+  changeFavorite(id: number, event: any) {
+    if (this.favorite) {
+      this.removeFavorite(id);
+      this.favorite = false;
+
+      // change the button text
+      // event.target.innerHTML = "<i class=\"bi bi-heart\"></i> Add to Favorites"
+    } else {
+      this.addFavorite(id);
+      this.favorite = true;
+
+      // change the button text
+      // event.target.innerHTML = "<i class=\"bi bi-heart-fill\"></i> Remove from Favorites"
+    }
   }
 
 
@@ -161,22 +175,26 @@ export class ProductDetailsComponent {
     this.followerService.followUser(seller_id, user_id).then(r => {
       console.log(r);
     });
-    location.reload();
   }
 
   unfollowUser(seller_id: number, user_id: number) {
     this.followerService.unfollowUser(seller_id, user_id).then(r => {
       console.log(r);
     });
-    location.reload();
   }
 
-  reload(){
-    location.reload();
-  }
+  changeFollow(seller_id: number, user_id: number, event: any) {
+    if (this.isFollowingSeller) {
+      this.unfollowUser(seller_id, user_id);
+      this.isFollowingSeller = false;
+      this.seller_followers = this.seller_followers - 1;
 
-  goBack(): void {
-    this.location.back();
+    } else {
+      this.followUser(seller_id, user_id);
+      this.isFollowingSeller = true;
+      this.seller_followers = this.seller_followers + 1;
+
+    }
   }
 }
 

@@ -143,30 +143,6 @@ export class SellerComponent {
     }
   }
 
-  followUser(): void {
-    this.followerService.followUser(this.user.id, this.currentUser.id)
-      .then(() => {
-        this.isFollowing = true;
-        this.followers = this.followers + 1;
-      })
-      .catch((error) => {
-        console.error('Error following user:', error);
-      });
-    location.reload();
-  }
-
-  unfollowUser(): void {
-    this.followerService.unfollowUser(this.user.id, this.currentUser.id)
-      .then(() => {
-        this.isFollowing = false;
-        this.followers = this.followers - 1;
-      })
-      .catch((error) => {
-        console.error('Error unfollowing user:', error);
-      });
-    location.reload();
-  }
-
   removeComment(event : any): void {
     // get the comment id from the button id
     let commentId = event.target.id.split("_")[1];
