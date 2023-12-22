@@ -21,13 +21,14 @@ export class ProfileHeaderComponent {
 
   at: string = '@';
   currentUser: User = {} as User;
-  isFollowing: boolean = false;
+  isFollowing!: boolean ;
   currentUserService: CurrentUserService = inject(CurrentUserService);
   followerService: FollowerService = inject(FollowerService);
 
   constructor() {
     this.currentUserService.getCurrentUser().then((user: User) => {
       this.currentUser = user;
+      console.log("Following user: ", this.user);
       this.followerService.getFollowers(this.user.id).then((followers: User[]) => {
         console.log("Followers: ", followers, " for user: ", this.user);
         if (followers.find(f => f.id == this.currentUser.id)) {
@@ -37,6 +38,7 @@ export class ProfileHeaderComponent {
           console.log("User is not following seller: ", this.user);
           this.isFollowing = false;
         }
+        console.log("Is following: ", this.isFollowing);
       });
     });
   }

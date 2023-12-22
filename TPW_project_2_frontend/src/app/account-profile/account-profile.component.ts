@@ -8,11 +8,12 @@ import {CommonModule} from "@angular/common";
 import {RouterLink} from "@angular/router";
 import {ProductComponent} from "../product/product.component";
 import {ProfileHeaderComponent} from "../profile-header/profile-header.component";
+import {LoadingComponent} from "../loading/loading.component";
 
 @Component({
   selector: 'app-account-profile',
   standalone: true,
-  imports: [CommonModule, RouterLink, ProductComponent, ProfileHeaderComponent],
+  imports: [CommonModule, RouterLink, ProductComponent, ProfileHeaderComponent, LoadingComponent],
   templateUrl: './account-profile.component.html',
   styleUrl: './account-profile.component.css'
 })
@@ -33,6 +34,7 @@ export class AccountProfileComponent {
   followers: number = 0;
   following: number = 0;
   products: Product[] = [];
+  load: boolean = true;
 
   currentUserService: CurrentUserService = inject(CurrentUserService)
   followerService: FollowerService = inject(FollowerService);
@@ -66,9 +68,11 @@ export class AccountProfileComponent {
           .catch((error) => {
             console.error('Error fetching products:', error);
           });
+        this.load = false;
       })
       .catch((error) => {
         console.error('Error fetching current user:', error);
+        this.load = false;
       });
   }
 }

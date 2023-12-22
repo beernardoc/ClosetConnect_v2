@@ -21,7 +21,6 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'cart', component: CartComponent, canActivate: [AuthGuard] },
   { path: 'admin', component: AdminComponent},
-  { path: 'admin', component: AdminComponent},
   { path: 'account/settings', component: AccountSettingsComponent },
   { path: 'favorites', component: FavoritesComponent },
   { path: 'account/profile', component: AccountProfileComponent },
