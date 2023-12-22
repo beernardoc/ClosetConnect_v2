@@ -15,12 +15,13 @@ import {CurrentUserService} from "../current-user.service";
 import {Router} from "@angular/router";
 import {window} from "rxjs";
 import {Comment} from "../comment";
+import {LoadingComponent} from "../loading/loading.component";
 
 
 @Component({
   selector: 'app-product-details',
   standalone: true,
-  imports: [CommonModule, UsersComponent, FormsModule, RouterLink, NgOptimizedImage],
+  imports: [CommonModule, UsersComponent, FormsModule, RouterLink, NgOptimizedImage, LoadingComponent],
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.css'
 })
@@ -40,6 +41,7 @@ export class ProductDetailsComponent {
   currentUserService: CurrentUserService = inject(CurrentUserService);
   comments: Comment[] = [];
   userService: UserService = inject(UserService);
+  load: boolean = true;
 
   constructor(private router: ActivatedRoute, private location: Location) {
     let productID = this.router.snapshot.paramMap.get('product_id');
@@ -120,6 +122,7 @@ export class ProductDetailsComponent {
           this.favorite = false;
         }
       });
+      this.load = false;
     });
   }
 
