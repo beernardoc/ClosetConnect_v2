@@ -168,26 +168,25 @@ export class SellerComponent {
     if (this.commentForm.valid && this.selectedRating != "0") {
       this.commentError = false;
       this.ratingError = false;
-      let comment = this.commentForm.value.comment;
+      let text = this.commentForm.value.comment;
       let rating = this.selectedRating;
-      console.log(comment, rating);
       this.commentForm.reset();
       this.selectedRating = "0";
-      this.comments.unshift({
-        id: this.comments.length + 1,
-        text: comment,
-        rating: parseInt(rating),
-        user_id: this.currentUser.id,
-        seller_id: this.user.id,
-        image: this.currentUser.image_base64,
-        name: this.currentUser.name,
-        alter: true
-      });
 
       // add the comment to the database
-      this.commentService.addComment(comment, parseInt(rating), this.currentUser.id, this.user.id)
-        .then(() => {
+      this.commentService.addComment(text, parseInt(rating), this.currentUser.id, this.user.id)
+        .then((comment: Comment) => {
           console.log("Added comment to database");
+          this.comments.unshift({
+            id: comment.id,
+            text: text,
+            rating: parseInt(rating),
+            user_id: this.currentUser.id,
+            seller_id: this.user.id,
+            image: this.currentUser.image_base64,
+            name: this.currentUser.name,
+            alter: true
+          });
         })
         .catch((error) => {
           console.error('Error adding comment to database:', error);

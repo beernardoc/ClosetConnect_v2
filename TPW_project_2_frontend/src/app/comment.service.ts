@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-
+import {Comment} from "./comment";
 @Injectable({
   providedIn: 'root'
 })
@@ -17,13 +17,19 @@ export class CommentService {
     });
   }
 
-  async addComment(text: string, rating: number, user_id: number, seller_id: number): Promise<Response> {
+  async addComment(text: string, rating: number, user_id: number, seller_id: number): Promise<Comment> {
     const url: string = this.baseUrl + "add_comment";
-    return await fetch(url, {
+    const data: Response = await fetch(url, {
       method: "POST",
       headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({text: text, rating: rating, user_id: user_id, seller_id: seller_id})
+      body: JSON.stringify({
+        text: text,
+        rating: rating,
+        user_id: user_id,
+        seller_id: seller_id
+      })
     });
+    return await data.json();
   }
 
 

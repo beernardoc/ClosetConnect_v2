@@ -26,6 +26,7 @@ export class LoginUserService {
     const response: any = await data.json();
     if (response.token) {
       localStorage.setItem('token', response.token);
+      localStorage.setItem('id', response.user.id);
       return true;
     } else {
       return false;

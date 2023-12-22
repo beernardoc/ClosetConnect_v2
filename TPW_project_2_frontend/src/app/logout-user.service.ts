@@ -10,6 +10,7 @@ export class LogoutUserService {
   async logout(): Promise<boolean> {
     // remove the token from the local storage
     localStorage.removeItem("token");
+    localStorage.removeItem("id");
 
     return true;
   }

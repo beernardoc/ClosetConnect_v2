@@ -763,7 +763,10 @@ def loginREST(request):
 
     token, created = Token.objects.get_or_create(user=user)
     serializer = AuthUserSerializer(instance=user)
-    return Response({'token': token.key, 'user': serializer.data})
+    # get the user from the database
+    user = User.objects.get(username=user.username)
+    user_serializer = UserSerializer(user)
+    return Response({'token': token.key, 'user': user_serializer.data})
 
 
 # Registering a user, REST API
@@ -1474,6 +1477,7 @@ def unfollow_user(request, user_id):
 @api_view(['DELETE'])
 def delete_comment(request, comment_id):
     try:
+        print(comment_id)
         comment = Comment.objects.get(id=comment_id)
         comment.delete()
 
@@ -1496,8 +1500,9 @@ def add_comment(request):
 
         comment = Comment.objects.create(text=text, rating=rating, user_id=user, seller_id=seller)
         comment.save()
+        serializer = CommentSerializer(comment)
 
-        return Response(status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     except User.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
