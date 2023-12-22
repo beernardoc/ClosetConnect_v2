@@ -33,8 +33,11 @@ export class FavoriteService {
       const url: string = this.baseUrl + "add_favorite";
       const data: Response = await fetch(url, {
         method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({product_id: product_id, user_id: localStorage.getItem("id")})
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Token " + localStorage.getItem("token")
+        },
+        body: JSON.stringify({product_id: product_id})
       });
 
       if (!data.ok) {
@@ -53,8 +56,10 @@ export class FavoriteService {
       const url: string = this.baseUrl + "remove_favorite/" + id;
       const data: Response = await fetch(url, {
         method: "DELETE",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({product_id: id, user_id: localStorage.getItem("id")})
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Token " + localStorage.getItem("token")
+        },
       });
 
       if (!data.ok) {

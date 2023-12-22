@@ -1129,13 +1129,15 @@ def get_favorite_products(request, user_id):
 
 
 @api_view(['POST'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def add_favorite(request):
-    user_id = request.data['user_id']
+    username = request.user.username
     product_id = request.data['product_id']
 
     try:
         product = get_object_or_404(Product, id=product_id)
-        user = User.objects.get(id=user_id)
+        user = User.objects.get(username=username)
         favorite, created = Favorite.objects.get_or_create(user_id=user, product_id=product)
 
         if not created:
@@ -1158,10 +1160,12 @@ def add_favorite(request):
 
 
 @api_view(['DELETE'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def remove_favorite(request, product_id):
     try:
-        user_id = request.data['user_id']
-        user = get_object_or_404(User, id=user_id)
+        username = request.user.username
+        user = get_object_or_404(User, username=username)
         product = get_object_or_404(Product, id=product_id)
 
         favorite = get_object_or_404(Favorite, user_id=user, product_id=product)
