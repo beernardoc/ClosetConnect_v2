@@ -72,6 +72,7 @@ export class ProductDetailsComponent {
               for (let product of products) {
                 if (product.id != this.product.id) {
                   this.other_products.push(product);
+                  console.log("Other Products: ", this.other_products);
                 }
               }
             });
@@ -126,6 +127,8 @@ export class ProductDetailsComponent {
   updateRating() {
     if (this.count > 0) {
       this.rating = this.rating / this.count;
+      // Round to 1 decimal place
+      this.rating = Math.round(this.rating * 10) / 10;
       console.log("Rating: ", this.rating);
     } else {
       console.log("No comments available, rating set to 0");

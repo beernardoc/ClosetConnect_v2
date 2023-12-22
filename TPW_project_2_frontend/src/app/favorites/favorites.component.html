@@ -1,4 +1,4 @@
-<h1 class="text-muted">Favorites</h1>
+<h1 class="text-muted">Favorites <i class="bi bi-heart-fill"></i></h1>
 <div class="row row-cols-1 row-cols-md-3 g-4" style="min-height: 400px">
   <ng-container *ngIf="favorites.length > 0">
     <app-product *ngFor="let product of favorite_products" [product]="product" [layout]="1"></app-product>
