@@ -53,9 +53,6 @@ def get_products(request):
     except Product.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-
-
-
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -156,32 +153,6 @@ def registerREST(request):
     except User.DoesNotExist:
         print("User does not exist")
         return Response(status=status.HTTP_404_NOT_FOUND)
-
-
-# Current user, REST API
-@api_view(['GET'])
-def current_user(request):
-    user = request.user
-    print(user)
-    if user.is_authenticated:
-        # get the user from the database
-        user = User.objects.get(username=user.username)
-        serializer = UserSerializer(user)
-        return Response(serializer.data)
-    return Response(status=status.HTTP_404_NOT_FOUND)
-
-
-# No user image, REST API
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def no_user_image(request):
-    # send the image as a base64 string
-    image = open('app/static/images/no_user_image.png', 'rb')
-    image_read = image.read()
-    image_64_encode = base64.b64encode(image_read)
-    image.close()
-    return Response(image_64_encode)
-
 
 @api_view(['POST'])
 def post_item_cart(request):
@@ -429,21 +400,6 @@ def update_cart(request):
 
     except CartItem.DoesNotExist:
         return redirect('pagina_de_erro')  # Substitua 'pagina_de_erro' pelo nome da URL da página de erro apropriada
-
-
-@api_view(['GET'])
-def current_user(request):
-    try:
-        name = request.GET['username']
-        user = User.objects.get(username=name)
-        serializer = UserSerializer(user)
-
-        return Response(serializer.data)
-
-    except User.DoesNotExist:
-        return JsonResponse({'status': 'error', 'message': 'User not found'}, status=404)
-
-
 
 @api_view(['GET'])
 def get_favorites(request):

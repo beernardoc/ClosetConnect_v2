@@ -58,11 +58,6 @@ urlpatterns = [
     path('ws/update_cart', views.update_cart),
     path('ws/process_payment', views.post_order),
 
-    ### NOT USED ###
-    path('ws/current_user', views.current_user),
-    path('ws/no_user_image', views.no_user_image),
-    ### NOT USED ###
-
     ## Authentication
     path('ws/register', views.registerREST),
     path('ws/login', views.loginREST),
