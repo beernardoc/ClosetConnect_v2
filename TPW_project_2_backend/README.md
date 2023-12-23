@@ -5,6 +5,22 @@ Project for TPW class 2023/2024
 
 The project encompasses a robust Django REST application designed to seamlessly handle incoming HTTP requests and execute server-side actions with efficiency.
 
+## Setup
+
+To facilitate the setup of the project, we have the necessary requirements in the requirements.txt file.
+
+Also, we created a python script, "insertData.py" to insert some data into the database, so that the project is not empty.
+The users inserted just need to be inserted in the Users table (Authentication and Authorization) in the Django Admin page, with the same username and password.
+
+main commands:
+```bash
+- pip install -r requirements.txt
+- python manage.py makemigrations
+- python manage.py migrate
+- python insertData.py
+- python manage.py runserver
+```
+
 ## Functionalities
 
 ### User with no account initiated
@@ -51,12 +67,6 @@ The project encompasses a robust Django REST application designed to seamlessly 
 |   joao   | user1234 |
 |   jose   | user1234 |
 
-## Setup
-
-To facilitate the setup of the project, we have the necessary requirements in the requirements.txt file.
-
-Also, we created a python script, "insertData.py" to insert some data into the database, so that the project is not empty.
-The users inserted just need to be inserted in the Users table (Authentication and Authorization) in the Django Admin page, with the same username and password.
 
 
 ## Features that we would like to implement in the future

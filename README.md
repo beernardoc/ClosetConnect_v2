@@ -73,6 +73,7 @@ main commands:
 
 main commands:
 ```bash
+- npm install
 - ng serve
 ```
 
