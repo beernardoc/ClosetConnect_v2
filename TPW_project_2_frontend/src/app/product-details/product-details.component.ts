@@ -77,6 +77,7 @@ export class ProductDetailsComponent {
                   console.log("Other Products: ", this.other_products);
                 }
               }
+              this.load = false;
             });
             this.userService.getUserComments(this.seller.id)
               .then((comments: Comment[]) => {
@@ -122,7 +123,6 @@ export class ProductDetailsComponent {
           this.favorite = false;
         }
       });
-      this.load = false;
     });
   }
 
