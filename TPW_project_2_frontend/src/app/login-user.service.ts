@@ -5,7 +5,7 @@ import {User} from "./user";
   providedIn: 'root'
 })
 export class LoginUserService {
-  private baseUrl: string = "http://localhost:8000/ws/";
+  private baseUrl: string = "http://zemendes.pythonanywhere.com/ws/";
 
   constructor() { }
 

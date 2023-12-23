@@ -4,7 +4,7 @@ import {Injectable} from '@angular/core';
   providedIn: 'root'
 })
 export class FollowerService {
-  private baseUrl: string = "http://localhost:8000/ws/";
+  private baseUrl: string = "http://zemendes.pythonanywhere.com/ws/";
 
   constructor() { }
 

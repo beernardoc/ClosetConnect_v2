@@ -4,7 +4,7 @@ import {Comment} from "./comment";
   providedIn: 'root'
 })
 export class CommentService {
-  private baseUrl: string = "http://localhost:8000/ws/";
+  private baseUrl: string = "http://zemendes.pythonanywhere.com/ws/";
 
   constructor() { }
 

@@ -6,7 +6,7 @@ import {Router} from '@angular/router';
   providedIn: 'root'
 })
 export class ConfirmOrderService {
-  private baseUrl: string = "http://localhost:8000/ws/";
+  private baseUrl: string = "http://zemendes.pythonanywhere.com/ws/";
 
   constructor(private router: Router) { }
 

@@ -7,7 +7,7 @@ import {Comment} from "./comment";
 })
 
 export class UserService {
-  private baseUrl: string = "http://localhost:8000/ws/";
+  private baseUrl: string = "http://zemendes.pythonanywhere.com/ws/";
 
   constructor() { }
 

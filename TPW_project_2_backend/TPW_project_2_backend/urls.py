@@ -22,6 +22,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
+    path('admin/', admin.site.urls),
     # REST API
     path('ws/users', views.get_users),
     path('ws/user', views.get_user),

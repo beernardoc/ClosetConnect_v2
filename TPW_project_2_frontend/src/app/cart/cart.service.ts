@@ -5,7 +5,7 @@ import {Product} from "../product";
   providedIn: 'root'
 })
 export class CartService {
-  private baseUrl: string = "http://localhost:8000/ws/";
+  private baseUrl: string = "http://zemendes.pythonanywhere.com/ws/";
 
   constructor() { }
 

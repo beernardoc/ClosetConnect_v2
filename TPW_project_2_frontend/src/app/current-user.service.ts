@@ -6,7 +6,7 @@ import {base64toBlob} from "./utils";
   providedIn: 'root'
 })
 export class CurrentUserService {
-  private baseUrl: string = "http://localhost:8000/ws/";
+  private baseUrl: string = "http://zemendes.pythonanywhere.com/ws/";
 
   constructor() { }
 
