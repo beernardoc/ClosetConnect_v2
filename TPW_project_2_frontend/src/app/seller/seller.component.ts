@@ -153,6 +153,7 @@ export class SellerComponent {
     // remove the comment from the database
     this.commentService.removeComment(commentId)
       .then(() => {
+        this.comments = this.comments.filter(c => c.id != commentId);
         console.log("Removed comment from database");
       })
       .catch((error) => {
