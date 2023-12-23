@@ -1,9 +1,9 @@
 # ClosetConnect
-1st Project for TPW class 2023/2024
+Project for TPW class 2023/2024
 
 ## Project Description
 
-The project consists of a Django web application that allows users to shop/sell products that they do not want in their Closet anymore.
+The project encompasses a robust Django REST application designed to seamlessly handle incoming HTTP requests and execute server-side actions with efficiency.
 
 ## Functionalities
 
