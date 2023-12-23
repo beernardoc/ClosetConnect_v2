@@ -13,11 +13,12 @@ import {CommentService} from "../comment.service";
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {ProductComponent} from "../product/product.component";
 import {ProfileHeaderComponent} from "../profile-header/profile-header.component";
+import {LoadingComponent} from "../loading/loading.component";
 
 @Component({
   selector: 'app-seller',
   standalone: true,
-  imports: [CommonModule, RouterLink, ReactiveFormsModule, FormsModule, ProductComponent, ProfileHeaderComponent],
+  imports: [CommonModule, RouterLink, ReactiveFormsModule, FormsModule, ProductComponent, ProfileHeaderComponent, LoadingComponent],
   templateUrl: './seller.component.html',
   styleUrl: './seller.component.css'
 })
@@ -46,6 +47,7 @@ export class SellerComponent {
   selectedRating: string = "0";
   commentError: boolean = false;
   ratingError: boolean = false;
+  load: boolean = true;
 
   followerService: FollowerService = inject(FollowerService);
   productService: ProductService = inject(ProductService);
@@ -126,6 +128,7 @@ export class SellerComponent {
                   .catch((error) => {
                     console.error('Error fetching favorite products:', error);
                   });
+                this.load = false;
               })
               .catch((error) => {
                 console.error('Error fetching products:', error);

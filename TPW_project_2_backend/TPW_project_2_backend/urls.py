@@ -22,27 +22,6 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("", views.index, name="index"),
-    path("index/", views.index, name="index"),
-    path("login/", auth_views.LoginView.as_view(template_name="login.html"), name="login"),
-    path("register/", views.register, name="register"),
-    path("logout", auth_views.LogoutView.as_view(next_page='/login'), name="logout"),
-    path("account/settings/", views.profile_settings, name="profile_settings"),
-    path("account/sell/", views.sell, name="sell"),
-    path("account/profile/", views.profile, name="profile"),
-    path("account/product/<int:product_id>/", views.product_settings, name="product"),
-    path('add_to_cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
-    path('view_cart', views.viewCart, name='view_cart'),
-    path('delete_from_cart/<int:item_id>/', views.delete_from_cart, name='delete_from_cart'),
-    path("account/product/<int:product_id>/", views.product_settings, name="product_settings"),
-    path("product/<int:product_id>/", views.product_page, name="product_page"),
-    path("profile/<str:username>/", views.seller, name="seller"),
-    path("adminpage/", views.admin_page, name="admin_page"),
-    path("account/product/edit/<int:product_id>/", views.edit_product, name="edit_product"),
-    path("process_payment/", views.process_payment, name="process_payment"),
-    path("account/favorites/", views.favorites, name="favorites"),
-
     # REST API
     path('ws/users', views.get_users),
     path('ws/user', views.get_user),
@@ -79,11 +58,6 @@ urlpatterns = [
     path('ws/update_cart', views.update_cart),
     path('ws/process_payment', views.post_order),
     path('ws/add_product', views.add_product),
-
-    ### NOT USED ###
-    path('ws/current_user', views.current_user),
-    path('ws/no_user_image', views.no_user_image),
-    ### NOT USED ###
 
     ## Authentication
     path('ws/register', views.registerREST),
