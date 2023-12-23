@@ -78,6 +78,7 @@ urlpatterns = [
     path('ws/cart', views.get_cart),
     path('ws/update_cart', views.update_cart),
     path('ws/process_payment', views.post_order),
+    path('ws/add_product', views.add_product),
 
     ### NOT USED ###
     path('ws/current_user', views.current_user),

@@ -13,6 +13,7 @@ import {AccountProductComponent} from "./account-product/account-product.compone
 import {ConfirmOrderComponent} from "./confirm-order/confirm-order.component";
 import {AccountEditProductComponent} from "./account-edit-product/account-edit-product.component";
 import {SellerComponent} from "./seller/seller.component";
+import {AddProductComponent} from "./add-product/add-product.component";
 
 
 export const routes: Routes = [
@@ -30,4 +31,5 @@ export const routes: Routes = [
   { path: 'cart/confirmOrder', component: ConfirmOrderComponent },
   { path: 'account/product/edit/:id', component: AccountEditProductComponent },
   { path: 'profile/:username', component: SellerComponent },
+  { path: 'addProduct', component: AddProductComponent }
 ];

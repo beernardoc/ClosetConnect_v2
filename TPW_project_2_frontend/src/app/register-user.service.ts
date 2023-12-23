@@ -31,6 +31,7 @@ export class RegisterUserService {
     }
     // we have a token for the user, store it in the local storage
     localStorage.setItem("token", response.token);
+    localStorage.setItem("id", user.id.toString());
 
     return true;
   }

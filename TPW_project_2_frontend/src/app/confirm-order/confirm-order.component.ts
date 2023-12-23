@@ -28,9 +28,9 @@ export class ConfirmOrderComponent {
   products: any[] = [];
   cartinfo: any[] = [];
   price: number = 0;
-  user: string = "";
   cartService: CartService = inject(CartService);
   confirmOrderService: ConfirmOrderService = inject(ConfirmOrderService);
+  confirmOrder: boolean | undefined;
 
   constructor(private fb: FormBuilder, private router: Router, private sanitizer: DomSanitizer) {
     this.form = this.fb.group({
@@ -46,8 +46,6 @@ export class ConfirmOrderComponent {
       this.cartinfo = this.convertObjectToArray(result['cart']);
       this.products = this.convertObjectToArray(result['cart_items']);
       this.price = result['price'];
-      this.user = result['user'];
-      console.log("aq",result)
 
       // Iteração sobre o array
       this.products.forEach(produto => {
@@ -75,7 +73,7 @@ export class ConfirmOrderComponent {
   sendForm(): void {
     if (this.form.valid) {
       this.confirmOrderService.confirmOrder().then((result: any) => {
-
+        this.confirmOrder = true;
       });
     } else {
       console.log('Formulário inválido. Verifique os campos.');

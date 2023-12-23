@@ -14,7 +14,6 @@ export class CartComponent {
   products: any[] = [];
   cartinfo: any[] = [];
   price: number = 0;
-  user: string = "";
   cartService: CartService = inject(CartService);
 
   constructor() {
@@ -22,8 +21,6 @@ export class CartComponent {
       this.cartinfo = this.convertObjectToArray(result['cart']);
       this.products = this.convertObjectToArray(result['cart_items']);
       this.price = result['price'];
-      this.user = result['user'];
-      console.log("aqui", result);
     });
 
 

@@ -10,8 +10,9 @@ import {User} from "./user";
 })
 export class ProductService {
   private baseUrl: string = "http://localhost:8000/ws/";
-  constructor(private router: Router) { }
 
+  constructor(private router: Router) {
+  }
 
 
   async getProducts(): Promise<Product[]> {
@@ -69,7 +70,7 @@ export class ProductService {
 
   async addProductToCart(productID: number): Promise<Response> {
 
-    if(localStorage.getItem("username") == null){
+    if (localStorage.getItem("id") == null) {
       await this.router.navigate(['/login']);
     }
 
@@ -78,8 +79,11 @@ export class ProductService {
       const url: string = this.baseUrl + "add_product_to_cart";
       const data: Response = await fetch(url, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productID: productID, username: localStorage.getItem("username") })
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Token " + localStorage.getItem("token")
+        },
+        body: JSON.stringify({productID: productID, userid: localStorage.getItem("id")})
       });
 
       if (!data.ok) {
@@ -99,8 +103,8 @@ export class ProductService {
       const url: string = this.baseUrl + "delete_product/" + id;
       const data: Response = await fetch(url, {
         method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: id })
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({id: id})
       });
 
       if (!data.ok) {
@@ -159,7 +163,7 @@ export class ProductService {
     return await data.json() ?? [];
   }
 
-  async getSeller(product_id: number)   {
+  async getSeller(product_id: number) {
     const url: string = this.baseUrl + "seller/" + product_id;
     const data: Response = await fetch(url);
     const seller: User = await data.json() ?? null;
@@ -191,4 +195,30 @@ export class ProductService {
     });
     return await data.json() ?? false;
   }
+
+  async addProduct(product: Product): Promise<boolean> {
+    const url: string = this.baseUrl + "add_product";
+    const data: Response = await fetch(url, {
+      method: 'POST',
+      body: JSON.stringify(
+        {
+          name: product.name,
+          description: product.description,
+          image: product.image,
+          category: product.category,
+          brand: product.brand,
+          color: product.color,
+          price: product.price,
+          userid: localStorage.getItem("id")
+        }
+      ),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Token ' + localStorage.getItem("token")
+      }
+    });
+    return await data.json() ?? false;
+  }
+
 }
+

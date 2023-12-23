@@ -15,7 +15,7 @@ export class ConfirmOrderService {
     const data: Response = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({username: localStorage.getItem("username") })
+      body: JSON.stringify({userid: localStorage.getItem("id") })
     });
 
     if (!data.ok) {

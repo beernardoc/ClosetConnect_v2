@@ -1,0 +1,70 @@
+<div class="container mt-3">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-10 col-xl-8 mx-auto">
+      <h2 class="h3 mb-4 page-title text-muted" style="margin-top: 10px">Adding product...</h2>
+      <div class="my-4">
+
+        <hr class="my-4" />
+        <!-- Seu arquivo de template (ex: product-form.component.html) -->
+
+        <!-- product-form.component.html -->
+
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div class="form-group">
+            <label for="productName">Name:</label>
+            <input type="text" id="productName" formControlName="Name" class="form-control" />
+            <span id="NameError" style="color: red;" *ngIf="form.get('Name')?.hasError('required')">Enter a valid name</span>
+          </div>
+
+          <div class="form-group">
+            <label for="productDescription">Description:</label>
+            <input type="text" id="productDescription" formControlName="Description" class="form-control" />
+            <span id="DescriptonError" style="color: red;" *ngIf="form.get('Description')?.hasError('required')">Enter a valid descripton</span>
+
+          </div>
+
+          <div class="form-group">
+            <label for="productImage">Image:</label>
+            <input type="file" id="productImage" formControlName="Image" class="form-control" accept="image/*" (change)="onFileSelected($event)" />
+            <span id="ImageError" style="color: red;" *ngIf="form.get('Image')?.hasError('required')">Enter a valid image</span>
+
+          </div>
+
+          <div class="form-group">
+            <label for="productCategory">Category:</label>
+            <input type="text" id="productCategory" formControlName="Category" class="form-control" />
+            <span id="CategoryError" style="color: red;" *ngIf="form.get('Category')?.hasError('required')">Enter a valid category</span>
+          </div>
+
+          <div class="form-group">
+            <label for="productBrand">Brand:</label>
+            <input type="text" id="productBrand" formControlName="Brand" class="form-control" />
+            <span id="BrandError" style="color: red;" *ngIf="form.get('Brand')?.hasError('required')">Enter a valid brand</span>
+          </div>
+
+          <div class="form-group">
+            <label for="productColor">Color:</label>
+            <input type="text" id="productColor" formControlName="Color" class="form-control" />
+            <span id="ColorError" style="color: red;" *ngIf="form.get('Color')?.hasError('required')">Enter a valid color</span>
+          </div>
+
+          <div class="form-group">
+            <label for="productPrice">Price:</label>
+            <input type="number" id="productPrice" formControlName="Price" class="form-control" />
+            <span id="PriceError" style="color: red;" *ngIf="form.get('Price')?.hasError('required')">Enter a valid price</span>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+
+
+
+
+
+
+
+      </div>
+    </div>
+  </div>
+</div>

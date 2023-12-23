@@ -699,8 +699,6 @@ def get_products(request):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 
-
-
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -829,13 +827,16 @@ def no_user_image(request):
 
 
 @api_view(['POST'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def post_item_cart(request):
     product_id = request.data['productID']
-    username = request.data['username']
+    userid = request.data['userid']
+    print("product_id: ", product_id)
 
     try:
         product = get_object_or_404(Product, id=product_id)
-        user = User.objects.get(username=username)
+        user = User.objects.get(id=userid)
 
         cart, created = Cart.objects.get_or_create(user=user)
 
@@ -934,6 +935,7 @@ def get_user(request):
     except User.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+
 @api_view(['GET'])
 def get_user_by_id(request, user_id):
     # returns the user with the given token
@@ -943,6 +945,7 @@ def get_user_by_id(request, user_id):
         return Response(serializer.data)
     except User.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
 
 @api_view(['DELETE'])
 def delete_user(request, user_id):
@@ -1059,6 +1062,9 @@ def update_cart(request):
         id = request.data['id']
         product_name = request.data['productName']
 
+        print("id: ", id)
+        print("product_name: ", product_name)
+
         user = User.objects.get(id=id)
 
         cart = Cart.objects.get(user=user)
@@ -1089,7 +1095,6 @@ def current_user(request):
         return JsonResponse({'status': 'error', 'message': 'User not found'}, status=404)
 
 
-
 @api_view(['GET'])
 def get_favorites(request):
     try:
@@ -1113,7 +1118,6 @@ def get_favorite_products(request, user_id):
             products.append(favorite.product_id)
             image = favorite.product_id.image
             image_base64.append(base64.b64encode(image.read()))
-
 
         serializer = ProductSerializer(products, many=True)
         for i in range(len(serializer.data)):
@@ -1353,15 +1357,12 @@ def get_followers(request, user_id):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 
-
-
-
 @api_view(['POST'])
 def post_order(request):
-    username = request.data['username']
+    userid = request.data['userid']
 
     try:
-        user = User.objects.get(username=username)
+        user = User.objects.get(id=userid)
         cart, created = Cart.objects.get_or_create(user=user)
         price = round(cart.price, 2)
 
@@ -1510,9 +1511,45 @@ def add_comment(request):
     except Comment.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+
 # example of how to use authentication
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def example(request):
     return Response({'message': 'You are authenticated {}'.format(request.user.username)})
+
+
+@api_view(['POST'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def add_product(request):
+    try:
+        data = json.loads(request.body)
+        name = data['name']
+        description = data['description']
+        price = data['price']
+        category = data['category']
+        brand = data['brand']
+        color = data['color']
+        image = data['image']
+        image += '=' * (-len(image) % 4)
+        image = base64.b64decode(image)
+        # make it a file
+        image = ContentFile(image, f'{name}.png')
+        userid = data['userid']
+        user = User.objects.get(id=userid)
+
+        product = Product.objects.create(name=name, description=description, price=price, category=category,
+                                         brand=brand, color=color, image=image ,user_id=user)
+
+
+
+
+        product.save()
+        serializer = ProductSerializer(product)
+        return Response(serializer.data)
+
+    except User.DoesNotExist:
+        print("User does not exist")
+        return Response(status=status.HTTP_404_NOT_FOUND)
