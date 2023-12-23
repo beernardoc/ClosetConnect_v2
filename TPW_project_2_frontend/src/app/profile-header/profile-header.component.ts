@@ -2,13 +2,17 @@ import {Component, inject, Input} from '@angular/core';
 import {User} from "../user";
 import {CurrentUserService} from "../current-user.service";
 import {FollowerService} from "../follower.service";
-import {NgIf} from "@angular/common";
+import {Location, NgIf} from "@angular/common";
+import {ActivatedRoute} from "@angular/router";
+import {UserService} from "../user.service";
+import {LoadingComponent} from "../loading/loading.component";
 
 @Component({
   selector: 'app-profile-header',
   standalone: true,
   imports: [
-    NgIf
+    NgIf,
+    LoadingComponent
   ],
   templateUrl: './profile-header.component.html',
   styleUrl: './profile-header.component.css'
@@ -24,23 +28,36 @@ export class ProfileHeaderComponent {
   isFollowing!: boolean ;
   currentUserService: CurrentUserService = inject(CurrentUserService);
   followerService: FollowerService = inject(FollowerService);
+  userService: UserService = inject(UserService);
+  load: boolean = true;
 
-  constructor() {
-    this.currentUserService.getCurrentUser().then((user: User) => {
-      this.currentUser = user;
-      console.log("Following user: ", this.user);
-      this.followerService.getFollowers(this.user.id).then((followers: User[]) => {
-        console.log("Followers: ", followers, " for user: ", this.user);
-        if (followers.find(f => f.id == this.currentUser.id)) {
-          console.log("User is following seller: ", this.user);
-          this.isFollowing = true;
-        } else {
-          console.log("User is not following seller: ", this.user);
-          this.isFollowing = false;
-        }
-        console.log("Is following: ", this.isFollowing);
-      });
-    });
+  constructor(private router: ActivatedRoute, private location: Location) {
+    let username = this.router.snapshot.paramMap.get('username');
+    if (!username) {
+      this.load = false;
+    }
+    if (typeof username === "string") {
+      this.userService.getUserByUsername(username)
+        .then((user: User) => {
+          this.user = user;
+          this.currentUserService.getCurrentUser().then((user: User) => {
+            this.currentUser = user;
+            this.followerService.getFollowers(this.user.id).then((followers: User[]) => {
+              if (followers.find(f => f.id == this.currentUser.id)) {
+                console.log("User is following seller: ", this.user);
+                this.isFollowing = true;
+              } else {
+                console.log("User is not following seller: ", this.user);
+                this.isFollowing = false;
+              }
+              this.load = false;
+            });
+          });
+        })
+        .catch((error) => {
+          console.error('Error fetching user:', error);
+        });
+    }
   }
 
   followUser(): void {

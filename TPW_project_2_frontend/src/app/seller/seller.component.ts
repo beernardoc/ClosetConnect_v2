@@ -35,7 +35,6 @@ export class SellerComponent {
     sold: 0,
     image_base64: ""
   };
-  at: string = "@";
   currentUser : User = {} as User;
   followers: number = 0;
   following: number = 0;
@@ -47,7 +46,6 @@ export class SellerComponent {
   selectedRating: string = "0";
   commentError: boolean = false;
   ratingError: boolean = false;
-  load: boolean = true;
 
   followerService: FollowerService = inject(FollowerService);
   productService: ProductService = inject(ProductService);
@@ -128,7 +126,6 @@ export class SellerComponent {
                   .catch((error) => {
                     console.error('Error fetching favorite products:', error);
                   });
-                this.load = false;
               })
               .catch((error) => {
                 console.error('Error fetching products:', error);

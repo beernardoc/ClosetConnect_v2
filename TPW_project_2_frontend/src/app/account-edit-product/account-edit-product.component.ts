@@ -105,7 +105,10 @@ export class AccountEditProductComponent {
               this.productService.updateProduct(this.product)
                 .then((success: boolean) => {
                   if (success) {
-                    this.location.back();
+                    this.route.navigate([`account/product/${this.product.id}`])
+                      .then(() => {
+                        window.location.reload();
+                      });
                   }
                 })
                 .catch((error) => {
