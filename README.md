@@ -1,7 +1,7 @@
 # ClosetConnect
 2nd Project developed for the Technologies and Web Programming class of 2023/2024.</br>
-It is a continuation of the 1st Project in which we seperate the client-side and server-side of the application.
 
+This is a continuation of the [1st Project](https://github.com/beernardoc/ClosetConnect), in which client and server side were combined in Django. In this continuation, the front-side is developed in Angular, while the server-side was migrated to Django Rest Framework
 ## Project Description
 
 The project consists of a web application that allows users to shop/sell products that they do not want in their Closet anymore.
