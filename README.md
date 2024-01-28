@@ -6,6 +6,18 @@ This is a continuation of the [1st Project](https://github.com/beernardoc/Closet
 
 The project consists of a web application that allows users to shop/sell products that they do not want in their Closet anymore.
 
+## Authors
+
+| Name             | Number    | E-Mail               |
+| ---------------- | --------- | -------------------- |
+| Bernardo Pinto   | 105926    | bernardopinto@ua.pt  |
+| Filipe Obrist    | 107471    | filipe.obrist@ua.pt  |
+| José Mendes      | 107188    | mendes.j@ua.pt       |
+
+## Deployment
+
+http://zemendes17.pythonanywhere.com/
+
 ## Functionalities
 
 ### User with no account initiated
@@ -87,18 +99,6 @@ main commands:
 - Order history
 - Search for products
 
-## Authors
 
-| Name             | Number    | E-Mail               |
-| ---------------- | --------- | -------------------- |
-| Bernardo Pinto   | 105926    | bernardopinto@ua.pt  |
-| Filipe Obrist    | 107471    | filipe.obrist@ua.pt  |
-| José Mendes      | 107188    | mendes.j@ua.pt       |
 
-## Deployment
 
-### Server-side (Django REST Framework)
-http://zemendes17.pythonanywhere.com/
-
-### Client-side (Angular)
-https://closetconnect-tpw.netlify.app/
