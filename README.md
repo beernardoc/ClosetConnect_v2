@@ -14,9 +14,10 @@ The project consists of a web application that allows users to shop/sell product
 | Filipe Obrist    | 107471    | filipe.obrist@ua.pt  |
 | José Mendes      | 107188    | mendes.j@ua.pt       |
 
+
 ## Deployment
 
-http://zemendes17.pythonanywhere.com/
+https://closetconnect-tpw.netlify.app/
 
 ## Functionalities
 
